@@ -17,14 +17,14 @@
 </div>
 <div align="center">
     <h1>Product list</h1>
-<%--    <c:forEach var="product" items="${products}">--%>
-<%--        <div style="border: 1px solid black; margin: 10px; padding: 10px;">--%>
-<%--            <h2>${product.name}</h2>--%>
-<%--            <img src="${product.imageUrl}" alt="${product.name}" style="max-width: 200px; max-height: 200px;">--%>
-<%--            <p>Price: ${product.price}</p>--%>
-<%--            <p>Category: ${product.category}</p>--%>
-<%--        </div>--%>
-<%--    </c:forEach>--%>
+    <c:forEach var="product" items="${products}">
+        <div style="border: 1px solid black; margin: 10px; padding: 10px;">
+            <h2>${product.name}</h2>
+            <img src="${product.imageUrl}" alt="${product.name}" style="max-width: 200px; max-height: 200px;">
+            <p>Price: ${product.price}</p>
+            <p>Category: ${product.category}</p>
+        </div>
+    </c:forEach>
 </div>
 </body>
 </html>

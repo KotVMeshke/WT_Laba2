@@ -7,7 +7,7 @@ import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
 import com.example.wt_laba2.factory.DAOFactory;
 import com.example.wt_laba2.logic.ICommand;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
