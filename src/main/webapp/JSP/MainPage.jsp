@@ -7,25 +7,33 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Список товаров</title>
+    <title>TechShop</title>
+    <link rel="stylesheet" type="text/css" href="../Styles/MainPage.css">
 </head>
 <body>
 <div align="right">
-    <a href="logout.jsp">Выйти</a>
+    <a href="logout.jsp">Log out</a>
 </div>
-<div align="center">
-    <h1>Product list</h1>
+<form action="../Controller" method="get">
+    <input type="hidden" name="command" value="DISPLAY_PRODUCTS" />
+    <button type="submit">Show List</button>
+</form>
+<div class="container">
+    <h1>Product List</h1>
     <c:forEach var="product" items="${products}">
-        <div style="border: 1px solid black; margin: 10px; padding: 10px;">
-            <h2>${product.name}</h2>
-            <img src="${product.imageUrl}" alt="${product.name}" style="max-width: 200px; max-height: 200px;">
+        <div class="product-box">
+            <h2>${product.productName}</h2>
+            <img src="${product.filename}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">
             <p>Price: ${product.price}</p>
             <p>Category: ${product.category}</p>
         </div>
     </c:forEach>
+
 </div>
 </body>
 </html>
+
 

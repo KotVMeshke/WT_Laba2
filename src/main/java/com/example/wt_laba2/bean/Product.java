@@ -1,10 +1,19 @@
 package com.example.wt_laba2.bean;
 
 public class Product {
-    public String productName;
-    public double price;
+    private int id;
+    private String productName;
+    private String price;
     public String category;
-    public String fileName;
+    private String fileName;
+
+    public Product(int id, String productName, String price, String category, String fileName) {
+        this.id = id;
+        this.productName = productName;
+        this.price = price;
+        this.category = category;
+        this.fileName = fileName;
+    }
 
     public String getProductName() {
         return productName;
@@ -14,11 +23,11 @@ public class Product {
         this.productName = productName;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
@@ -37,4 +46,12 @@ public class Product {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }
