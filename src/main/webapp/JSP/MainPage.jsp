@@ -11,6 +11,8 @@
 <html>
 <head>
     <title>TechShop</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../Styles/MainPage.css">
 </head>
 <body>
@@ -26,12 +28,11 @@
     <c:forEach var="product" items="${products}">
         <div class="product-box">
             <h2>${product.productName}</h2>
-            <img src="${product.filename}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">
+            <img src="${product.fileName}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">
             <p>Price: ${product.price}</p>
             <p>Category: ${product.category}</p>
         </div>
     </c:forEach>
-
 </div>
 </body>
 </html>

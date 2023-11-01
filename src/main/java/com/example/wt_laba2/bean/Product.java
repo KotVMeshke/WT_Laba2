@@ -1,11 +1,11 @@
 package com.example.wt_laba2.bean;
 
 public class Product {
-    private int id;
-    private String productName;
-    private String price;
+    public int id;
+    public String productName;
+    public String price;
     public String category;
-    private String fileName;
+    public String fileName;
 
     public Product(int id, String productName, String price, String category, String fileName) {
         this.id = id;

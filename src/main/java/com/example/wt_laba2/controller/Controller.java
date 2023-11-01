@@ -23,8 +23,24 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter pw = resp.getWriter();
-        pw.println("<h2>sdfsdds</h2>");
+        String commandName = req.getParameter(RequestCommandName.COMMAND_NAME);
+        String result = null;
+        ICommand command = CommandHelper.getCommandHelper().getCommand(commandName);
+        try{
+            result = command.execute(req);
+        }catch (CommandException ex){
+            result = "Error";
+        }catch (Exception ex) {
+            result = "Error";
+        }
+//        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
+//        if (dispatcher != null){
+//            dispatcher.forward(req, resp);
+//        } else{
+//            errorMessageDireclyFromresponse(resp);
+//        }
+        resp.sendRedirect(result);
+
     }
 
     @Override
@@ -40,12 +56,13 @@ public class Controller extends HttpServlet {
         }catch (Exception ex) {
             result = "Error";
         }
-        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
-        if (dispatcher != null){
-            dispatcher.forward(req, resp);
-        } else{
-            errorMessageDireclyFromresponse(resp);
-        }
+        resp.sendRedirect(result);
+//        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
+//        if (dispatcher != null){
+//            dispatcher.forward(req, resp);
+//        } else{
+//            errorMessageDireclyFromresponse(resp);
+//        }
     }
     private void errorMessageDireclyFromresponse(HttpServletResponse response) throws IOException{
         response.setContentType("text/html");

@@ -5,10 +5,23 @@ body {
 .container {
     text-align: center;
     margin-top: 50px;
+    border: solid 2px red;
 }
 
+/*.product-box {*/
+/*    border: 1px solid black;*/
+/*    margin: 10px;*/
+/*    padding: 10px;*/
+/*}*/
 .product-box {
-    border: 1px solid black;
-    margin: 10px;
-    padding: 10px;
+    display: block;
+    border: 1px solid #b5e9a7;
+    border-radius: 3px;
+    position: relative;
+    background: #fff;
+    margin: 0 20px 20px 0;
+    text-decoration: none;
+    color: #474747;
+    z-index: 0;
+    height: 300px;
 }

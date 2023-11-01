@@ -19,7 +19,7 @@ import java.util.List;
 public class GetProducts implements ICommand {
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
-        List<Product> list = new ArrayList<>();
+        List<Product> list = null;
         ProductDao productDao = null;
         try {
             productDao = DAOFactory.getFactory().getProductDao();
@@ -29,6 +29,6 @@ public class GetProducts implements ICommand {
         }catch (DAOException ex){
             throw new CommandException("Can't get XmlDao",ex);
         }
-        return "MainPage.jsp";
+        return "JSP/MainPage.jsp";
     }
 }
