@@ -23,9 +23,10 @@ public class Register implements ICommand {
             user.setLogin(request.getParameter("Login"));
             user.setPassword(request.getParameter("Password"));
             if (user.getPassword().equals( request.getParameter("confirm-password"))){
-                userDao.registration(user);
+                int userId = userDao.registration(user);
                 request.setAttribute("SomeMessage","Successful registration");
                 request.getSession().setAttribute(SessionAtributes.Authorized,true);
+                request.getSession().setAttribute(SessionAtributes.UserId, userId);
             }else
             {
                 request.setAttribute("IncorrectData", "Passwords are not the same");

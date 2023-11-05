@@ -31,6 +31,13 @@
             <img src="${product.fileName}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">
             <p>Price: ${product.price}</p>
             <p>Category: ${product.category}</p>
+
+            <!-- Кнопка "Add to cart" -->
+            <form action="Controller" method="post">
+                <input type="hidden" name="command" value="ADD_TO_CART">
+                <input type="hidden" name="productId" value="${product}">
+                <button type="submit">Add to cart</button>
+            </form>
         </div>
     </c:forEach>
 </div>

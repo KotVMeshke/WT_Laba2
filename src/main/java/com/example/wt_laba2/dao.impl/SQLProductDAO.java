@@ -2,7 +2,6 @@ package com.example.wt_laba2.dao.impl;
 
 import com.example.wt_laba2.bean.Product;
 import com.example.wt_laba2.bean.User;
-import com.example.wt_laba2.bean.UserRoles;
 import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.exception.DAOException;
 
@@ -16,6 +15,7 @@ public class SQLProductDAO implements ProductDao {
 
     private static final String GetProductsByCat = "Select * from product join product_category on pro_category = cat_id where cat_name = ?";
     private static final String GetProductsByName = "Select * from product where pro_name = ?";
+    private static final String AddProductIntoCart = "Insert into cart (crt_user, crt_product, crt_amount) values (?,?,?)";
     private static final String GetAllProducts = "Select * from product";
     @Override
     public List<Product> GetProductListByCat(String category) throws DAOException {
@@ -68,5 +68,33 @@ public class SQLProductDAO implements ProductDao {
             }
         }
         return list;
+    }
+    @Override
+    public void AddProductIntoCart(int productId, int userId, int amount) throws DAOException{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            ps = con.prepareStatement(AddProductIntoCart);
+            ps.setInt(1, userId);
+            ps.setInt(2,productId);
+            ps.setInt(3,amount);
+            rs = ps.executeQuery();
+
+        } catch (ClassNotFoundException e) {
+            throw new DAOException("Class not found");
+        } catch (SQLException e) {
+            throw new DAOException("Sql error");
+        } finally {
+            try {
+                if (con != null) {con.close();}
+                if (ps != null) {ps.close();}
+                if (rs != null) {rs.close();}
+            } catch (SQLException e) {
+                throw new DAOException("SQl connection close error", e);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class User {
+    private int id;
     private String Login;
     private final static String salt = "";
     private String Password;
@@ -60,5 +61,12 @@ public class User {
 
     public void setBan(boolean ban) {
         this.ban = ban;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

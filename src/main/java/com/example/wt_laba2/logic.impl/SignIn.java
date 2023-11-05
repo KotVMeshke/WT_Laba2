@@ -20,9 +20,11 @@ public class SignIn implements ICommand {
         List<Object> list = new ArrayList<>();
         try {
             userDao = DAOFactory.getFactory().getUserDao();
-            userDao.signIn(request.getParameter("Login"),request.getParameter("Password"));
+            int userId = userDao.signIn(request.getParameter("Login"),request.getParameter("Password"));
             request.setAttribute("SomeMessage","Successful LogIn");
             request.getSession().setAttribute(SessionAtributes.Authorized,true);
+            request.getSession().setAttribute(SessionAtributes.UserId, userId);
+
         }catch (DAOException ex){
             throw new CommandException("LogIn troubles, oops",ex);
         }

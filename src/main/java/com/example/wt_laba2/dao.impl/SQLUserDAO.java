@@ -21,7 +21,7 @@ public class SQLUserDAO implements UserDao {
     }
 
     @Override
-    public void signIn(String login, String password) throws DAOException {
+    public int signIn(String login, String password) throws DAOException {
         ResultSet rs = null;
         Connection con = null;
         PreparedStatement ps = null;
@@ -47,10 +47,12 @@ public class SQLUserDAO implements UserDao {
                 throw new DAOException("SQl connection close error", e);
             }
         }
+
+        return -1;
     }
 
     @Override
-    public void registration(User user) throws DAOException {
+    public int registration(User user) throws DAOException {
         Connection con = null;
         PreparedStatement ps = null;
         try {
@@ -75,6 +77,6 @@ public class SQLUserDAO implements UserDao {
                 throw new DAOException("SQl connection close error", e);
             }
         }
-
+        return -1;
     }
 }
