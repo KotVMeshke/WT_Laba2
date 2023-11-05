@@ -8,11 +8,6 @@ body {
     border: solid 2px red;
 }
 
-/*.product-box {*/
-/*    border: 1px solid black;*/
-/*    margin: 10px;*/
-/*    padding: 10px;*/
-/*}*/
 .product-box {
     display: block;
     border: 1px solid #b5e9a7;
