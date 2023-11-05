@@ -1,6 +1,7 @@
 package com.example.wt_laba2.logic.impl;
 
 import com.example.wt_laba2.bean.Product;
+import com.example.wt_laba2.bean.SessionAtributes;
 import com.example.wt_laba2.bean.User;
 import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.exception.CommandException;
@@ -20,7 +21,7 @@ public class AddProductIntoCart implements ICommand {
         try {
             productDao = DAOFactory.getFactory().getProductDao();
             int productId = Integer.parseInt(request.getParameter("productId"));
-            int userId = (int)request.getSession().getAttribute("userId");
+            int userId = (int)request.getSession().getAttribute(SessionAtributes.UserId);
             productDao.AddProductIntoCart(productId,userId,1);
 
         }catch (DAOException ex){

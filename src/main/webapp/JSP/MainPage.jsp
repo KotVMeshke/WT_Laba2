@@ -21,6 +21,10 @@
 </div>
 <form action="../Controller" method="get">
     <input type="hidden" name="command" value="DISPLAY_PRODUCTS" />
+
+    <label for="category">Category:</label>
+    <input type="text" id="category" name="category" />
+
     <button type="submit">Show List</button>
 </form>
 <div class="container">
@@ -32,10 +36,9 @@
             <p>Price: ${product.price}</p>
             <p>Category: ${product.category}</p>
 
-            <!-- Кнопка "Add to cart" -->
             <form action="Controller" method="post">
                 <input type="hidden" name="command" value="ADD_TO_CART">
-                <input type="hidden" name="productId" value="${product}">
+                <input type="hidden" name="productId" value="${product.id}">
                 <button type="submit">Add to cart</button>
             </form>
         </div>

@@ -12,24 +12,47 @@ import java.util.List;
 public class SQLProductDAO implements ProductDao {
 
     private static final String connectorDB ="jdbc:mysql://localhost:3306/mydb?serverTimezone=Europe/Moscow&useSSL=false";
-
-    private static final String GetProductsByCat = "Select * from product join product_category on pro_category = cat_id where cat_name = ?";
-    private static final String GetProductsByName = "Select * from product where pro_name = ?";
-    private static final String AddProductIntoCart = "Insert into cart (crt_user, crt_product, crt_amount) values (?,?,?)";
-    private static final String GetAllProducts = "Select * from product";
+    private static final String GetProductsByCat = "Select pro_id, pro_name, pro_price, cat_name,med_filename from product " +
+                                                   "join product_category on cat_id = pro_cat join media on med_id = pro_med where cat_name = ?";
+    private static final String AddProductIntoCart = "Insert into cart " +
+                                                     "(crt_user, crt_product, crt_amount) " +
+                                                     "values (?,?,?)";
+    private static final String GetAllProducts = "Select pro_id, pro_name, pro_price, cat_name,med_filename from product " +
+                                                 "join product_category on cat_id = pro_cat join media on med_id = pro_med";
     @Override
     public List<Product> GetProductListByCat(String category) throws DAOException {
-        return null;
-    }
-
-    @Override
-    public List<Product> GetProductListByName(String name) throws DAOException {
-        return null;
-    }
-
-    @Override
-    public List<Product> GetProduct(String name) throws DAOException {
-        return null;
+        List<Product> list= new ArrayList<>();
+        Connection con = null;
+        Statement st = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            ps = con.prepareStatement(GetProductsByCat);
+            ps.setString(1,category);
+            rs = ps.executeQuery();
+            while (rs.next()){
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5)));
+            }
+        } catch (ClassNotFoundException e) {
+            throw new DAOException("Class not found");
+        } catch (SQLException e) {
+            throw new DAOException("Sql error");
+        } finally {
+            try {
+                if (con != null) {con.close();}
+                if (ps != null) {ps.close();}
+                if (rs != null) {rs.close();}
+            } catch (SQLException e) {
+                throw new DAOException("SQl connection close error", e);
+            }
+        }
+        return list;
     }
 
     @Override
@@ -48,12 +71,9 @@ public class SQLProductDAO implements ProductDao {
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
-                        "rs.getInt(4)",
-                        "rs.getInt(5)"));
+                        rs.getString(4),
+                        rs.getString(5)));
             }
-
-
-
         } catch (ClassNotFoundException e) {
             throw new DAOException("Class not found");
         } catch (SQLException e) {
@@ -73,7 +93,7 @@ public class SQLProductDAO implements ProductDao {
     public void AddProductIntoCart(int productId, int userId, int amount) throws DAOException{
         Connection con = null;
         PreparedStatement ps = null;
-        ResultSet rs = null;
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(connectorDB, "root", "123456");
@@ -81,8 +101,10 @@ public class SQLProductDAO implements ProductDao {
             ps.setInt(1, userId);
             ps.setInt(2,productId);
             ps.setInt(3,amount);
-            rs = ps.executeQuery();
-
+            int rowNumber = ps.executeUpdate();
+            if (rowNumber == 0){
+                throw new DAOException("Class not found");
+            }
         } catch (ClassNotFoundException e) {
             throw new DAOException("Class not found");
         } catch (SQLException e) {
@@ -91,7 +113,6 @@ public class SQLProductDAO implements ProductDao {
             try {
                 if (con != null) {con.close();}
                 if (ps != null) {ps.close();}
-                if (rs != null) {rs.close();}
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }

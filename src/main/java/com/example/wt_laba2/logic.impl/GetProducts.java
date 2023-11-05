@@ -21,9 +21,15 @@ public class GetProducts implements ICommand {
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
         List<Product> list = null;
         ProductDao productDao = null;
+        String category = null;
         try {
+            category = request.getParameter("category");
             productDao = DAOFactory.getFactory().getProductDao();
-            list = productDao.GetAllProduct();
+           if (category == null){
+               list = productDao.GetAllProduct();
+           }else {
+               list = productDao.GetProductListByCat(category);
+           }
             request.setAttribute("products", list);
 
         }catch (DAOException ex){
