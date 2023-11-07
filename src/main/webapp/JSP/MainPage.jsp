@@ -13,7 +13,7 @@
     <title>TechShop</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="webapp/Styles/MainPage.css">
+    <link rel="stylesheet" type="text/css" href="../Styles/MainPage.css">
 </head>
 <body>
 <div align="right">
@@ -29,7 +29,7 @@
 </form>
 <div class="container">
     <h1>Product List</h1>
-    <c:forEach var="product" items="${products}">
+    <c:forEach var="product" items="${sessionScope.products}">
         <div class="product-box">
             <h2>${product.productName}</h2>
             <img src="${product.fileName}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">

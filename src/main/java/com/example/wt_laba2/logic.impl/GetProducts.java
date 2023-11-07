@@ -25,12 +25,13 @@ public class GetProducts implements ICommand {
         try {
             category = request.getParameter("category");
             productDao = DAOFactory.getFactory().getProductDao();
-           if (category == null){
+           if (category == null || category == ""){
                list = productDao.GetAllProduct();
            }else {
                list = productDao.GetProductListByCat(category);
            }
-            request.setAttribute("products", list);
+//            request.setAttribute("products", list);
+            request.getSession().setAttribute("products", list);
 
         }catch (DAOException ex){
             throw new CommandException("Can't get XmlDao",ex);

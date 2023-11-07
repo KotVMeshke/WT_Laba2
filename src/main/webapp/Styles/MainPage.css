@@ -1,22 +1,96 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: green;
+    padding: 10px 0;
+    text-align: center;
 }
 
 .container {
-    text-align: center;
-    margin-top: 50px;
-    border: solid 2px red;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
 }
 
 .product-box {
-    display: block;
-    border: 1px solid #b5e9a7;
-    border-radius: 3px;
-    position: relative;
-    background: #fff;
-    margin: 0 20px 20px 0;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
+    width: 250px;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-box h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.product-box img {
+    margin-bottom: 10px;
+    max-width: 100%;
+    height: auto;
+}
+
+.product-box p {
+    margin-bottom: 10px;
+}
+
+.product-box button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.product-box button:hover {
+    background-color: #45a049;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+form input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+form button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button:hover {
+    background-color: #555;
+}
+
+div.align-right {
+    text-align: right;
+    padding: 10px;
+    background-color: #333;
+}
+
+div.align-right a {
+    color: white;
     text-decoration: none;
-    color: #474747;
-    z-index: 0;
-    height: 300px;
 }

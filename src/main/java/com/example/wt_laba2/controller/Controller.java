@@ -34,12 +34,12 @@ public class Controller extends HttpServlet {
             result = "Error";
         }
 
-        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
-        if (dispatcher != null){
-            dispatcher.forward(req, resp);
-        } else{
-            errorMessageDireclyFromresponse(resp);
-        }
+//        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
+//        if (dispatcher != null){
+//            dispatcher.forward(req, resp);
+//        } else{
+//            errorMessageDireclyFromresponse(resp);
+//        }
         resp.sendRedirect(result);
 
     }
