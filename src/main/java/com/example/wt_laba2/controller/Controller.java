@@ -25,8 +25,9 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestCommandName.COMMAND_NAME);
         String result = null;
-        ICommand command = CommandHelper.getCommandHelper().getCommand(commandName);
         try{
+            ICommand command = CommandHelper.getCommandHelper().getCommand(commandName);
+
             result = command.execute(req);
         }catch (CommandException ex){
             result = "Error";

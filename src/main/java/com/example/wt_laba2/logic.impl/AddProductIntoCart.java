@@ -27,6 +27,6 @@ public class AddProductIntoCart implements ICommand {
         }catch (DAOException ex){
             throw new CommandException("Can't get XmlDao",ex);
         }
-        return null;
+        return "MainPage.Jsp";
     }
 }

@@ -1,9 +1,6 @@
 package com.example.wt_laba2.logic;
 
-import com.example.wt_laba2.logic.impl.AddProductIntoCart;
-import com.example.wt_laba2.logic.impl.GetProducts;
-import com.example.wt_laba2.logic.impl.Register;
-import com.example.wt_laba2.logic.impl.SignIn;
+import com.example.wt_laba2.logic.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +15,7 @@ public class CommandHelper {
         commands.put(CommandName.REGISTER, new Register());
         commands.put(CommandName.DISPLAY_PRODUCTS, new GetProducts());
         commands.put(CommandName.ADD_TO_CART, new AddProductIntoCart());
+        commands.put(CommandName.TO_PAGE, new PageChanger());
     }
 
     public static CommandHelper getCommandHelper(){

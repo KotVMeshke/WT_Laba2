@@ -21,7 +21,7 @@
 <div class="form-container">
     <div class="login-form">
         <h2>SIGN IN</h2>
-        <form action="../Controller" method="post">
+        <form action="Controller" method="post">
             <label for="Login">Login:</label>
             <input type="text" id="Login" name="Login" required><br>
 

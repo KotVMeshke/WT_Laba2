@@ -22,7 +22,7 @@ public class Register implements ICommand {
             userDao = DAOFactory.getFactory().getUserDao();
             user.setLogin(request.getParameter("Login"));
             user.setPassword(request.getParameter("Password"));
-            if (user.getPassword().equals( request.getParameter("confirm-password"))){
+            if (user.getPassword().equals(request.getParameter("confirm-password"))){
                 int userId = userDao.registration(user);
                 request.setAttribute("SomeMessage","Successful registration");
                 request.getSession().setAttribute(SessionAtributes.Authorized,true);
@@ -35,6 +35,6 @@ public class Register implements ICommand {
         }catch (DAOException ex){
             throw new CommandException("Can't get XmlDao",ex);
         }
-        return "JSP/MainPage.jsp";
+        return "MainPage.jsp";
     }
 }

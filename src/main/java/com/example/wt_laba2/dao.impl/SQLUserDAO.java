@@ -5,15 +5,13 @@ import com.example.wt_laba2.bean.UserRoles;
 import com.example.wt_laba2.dao.UserDao;
 import com.example.wt_laba2.exception.DAOException;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.sql.*;
 
 public class SQLUserDAO implements UserDao {
 
     private static String registerNewUser = "INSERT INTO user (idUser, UserLogin, UserPasswordHash,role,ban) Values (null, ?,?,?,?)";
     private static String checkIfUserExist = "Select * from user where userLogin = ? and UserPasswordHash = ?";
-    private static String getUserId = "Select idUser from user where UserLogin = ?";
+    private static String getUserId = "Select idUser, role from user where UserLogin = ?";
     private static String connectorDB ="jdbc:mysql://localhost:3306/mydb?serverTimezone=Europe/Moscow&useSSL=false";
     @Override
     public int hashCode() {
@@ -21,11 +19,11 @@ public class SQLUserDAO implements UserDao {
     }
 
     @Override
-    public int signIn(String login, String password) throws DAOException {
+    public User signIn(String login, String password) throws DAOException {
         ResultSet rs = null;
         Connection con = null;
         PreparedStatement ps = null;
-        int result = -1;
+        User user = new User();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(connectorDB, "root", "123456");
@@ -43,7 +41,8 @@ public class SQLUserDAO implements UserDao {
                 throw new SQLException("Incorrect login or password");
             }else
             {
-                result = rs.getInt(1);
+                user.setId(rs.getInt(1));
+                user.setRole(rs.getString(2));
             }
         } catch (ClassNotFoundException e) {
             throw new DAOException("Class not found");
@@ -59,7 +58,7 @@ public class SQLUserDAO implements UserDao {
             }
         }
 
-        return result;
+        return user;
     }
 
     @Override

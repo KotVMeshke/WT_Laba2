@@ -1,6 +1,7 @@
 package com.example.wt_laba2.logic.impl;
 
 import com.example.wt_laba2.bean.SessionAtributes;
+import com.example.wt_laba2.bean.User;
 import com.example.wt_laba2.dao.UserDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
@@ -20,14 +21,15 @@ public class SignIn implements ICommand {
         List<Object> list = new ArrayList<>();
         try {
             userDao = DAOFactory.getFactory().getUserDao();
-            int userId = userDao.signIn(request.getParameter("Login"),request.getParameter("Password"));
+            User user = userDao.signIn(request.getParameter("Login"),request.getParameter("Password"));
             request.setAttribute("SomeMessage","Successful LogIn");
             request.getSession().setAttribute(SessionAtributes.Authorized,true);
-            request.getSession().setAttribute(SessionAtributes.UserId, userId);
+            request.getSession().setAttribute(SessionAtributes.UserId, user.getId());
+            request.getSession().setAttribute(SessionAtributes.isAdmin, user.getRole());
 
         }catch (DAOException ex){
             throw new CommandException("LogIn troubles, oops",ex);
         }
-        return "JSP/MainPage.jsp";
+        return "MainPage.jsp";
     }
 }

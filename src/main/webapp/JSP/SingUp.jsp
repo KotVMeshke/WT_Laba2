@@ -21,7 +21,7 @@
 <div class="form-container">
     <div class="registration-form">
         <h2>SING UP</h2>
-        <form action="../Controller" method="post">
+        <form action="Controller" method="post">
             <label for="reg-login">Login:</label>
             <input type="text" id="reg-login" name="Login" required><br>
 

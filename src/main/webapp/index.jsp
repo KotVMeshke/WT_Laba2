@@ -14,10 +14,16 @@ pageEncoding="utf-8"%>
 <div class="container">
     <div class="header">
         <div class="logo">TechShop</div>
-        <div class="buttons">
-            <a href="JSP/Login.jsp" class="signin" >Sign In</a>
-            <a href="JSP/SingUp.jsp" class="signup">Sign Up</a>
-        </div>
+        <form  action="Controller" method="get">
+            <input type="hidden"  name="command" value="TO_PAGE" />
+            <input type="hidden" name="page_name" value="JSP/Login.jsp" />
+            <input type="submit" class="signin" id ="to_sing_in" value="Sing in">
+        </form>
+        <form   action="Controller" method="get">
+            <input type="hidden"  name="command" value="TO_PAGE" />
+            <input type="hidden" name="page_name" value="JSP/SingUp.jsp" />
+            <input type="submit" class="signup" id ="to_sing_up" value="Sing up">
+        </form>
     </div>
 </div>
 </body>

@@ -18,8 +18,11 @@
 <body>
 <div align="right">
     <a href="logout.jsp">Log out</a>
+    <c:if test="${sessionScope.isAdmin == 'Administrator'}">
+        <a href="admin.jsp">Administrator</a>
+    </c:if>
 </div>
-<form action="../Controller" method="get">
+<form action="Controller" method="get">
     <input type="hidden" name="command" value="DISPLAY_PRODUCTS" />
 
     <label for="category">Category:</label>
