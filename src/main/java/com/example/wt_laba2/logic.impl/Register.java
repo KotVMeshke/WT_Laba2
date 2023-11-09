@@ -1,5 +1,6 @@
 package com.example.wt_laba2.logic.impl;
 
+import com.example.wt_laba2.bean.JSPNameList;
 import com.example.wt_laba2.bean.SessionAtributes;
 import com.example.wt_laba2.bean.User;
 import com.example.wt_laba2.dao.UserDao;
@@ -35,6 +36,6 @@ public class Register implements ICommand {
         }catch (DAOException ex){
             throw new CommandException("Can't get XmlDao",ex);
         }
-        return "MainPage.jsp";
+        return JSPNameList.MAIN_PAGE;
     }
 }

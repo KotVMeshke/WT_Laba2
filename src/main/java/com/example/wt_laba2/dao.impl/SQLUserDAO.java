@@ -25,7 +25,7 @@ public class SQLUserDAO implements UserDao {
         PreparedStatement ps = null;
         User user = new User();
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(checkIfUserExist);
             ps.setString(1, login);
@@ -44,8 +44,8 @@ public class SQLUserDAO implements UserDao {
                 user.setId(rs.getInt(1));
                 user.setRole(rs.getString(2));
             }
-        } catch (ClassNotFoundException e) {
-            throw new DAOException("Class not found");
+//        } catch (ClassNotFoundException e) {
+//            throw new DAOException("Class not found");
         } catch (SQLException e) {
             throw new DAOException("Sql error");
         } finally {
@@ -68,7 +68,7 @@ public class SQLUserDAO implements UserDao {
         int result = -1;
         ResultSet rs= null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(registerNewUser);
             ps.setString(1, user.getLogin());
@@ -85,8 +85,8 @@ public class SQLUserDAO implements UserDao {
             {
                 result = rs.getInt(1);
             }
-        } catch (ClassNotFoundException e) {
-            throw new DAOException("Class not found");
+//        } catch (ClassNotFoundException e) {
+//            throw new DAOException("Class not found");
         } catch (SQLException e) {
             throw new DAOException("Sql error");
         } finally {

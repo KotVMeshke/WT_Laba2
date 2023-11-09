@@ -1,7 +1,7 @@
 package com.example.wt_laba2.logic;
 
 public enum JSPName {
-    MAIN_PAGE("/wt_laba2/"),
+    MAIN_PAGE("/WT_LABA2_war/"),
     ERROR_PAGE("");
     private final String urlPattern;
     JSPName(String urlPattern) {

@@ -27,7 +27,7 @@ public class SQLProductDAO implements ProductDao {
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(GetProductsByCat);
             ps.setString(1,category);
@@ -39,8 +39,8 @@ public class SQLProductDAO implements ProductDao {
                         rs.getString(4),
                         rs.getString(5)));
             }
-        } catch (ClassNotFoundException e) {
-            throw new DAOException("Class not found");
+//        } catch (ClassNotFoundException e) {
+//            throw new DAOException("Class not found");
         } catch (SQLException e) {
             throw new DAOException("Sql error");
         } finally {
@@ -63,7 +63,7 @@ public class SQLProductDAO implements ProductDao {
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(connectorDB, "root", "123456");
             st = con.createStatement();
             rs = st.executeQuery(GetAllProducts);
@@ -74,8 +74,8 @@ public class SQLProductDAO implements ProductDao {
                         rs.getString(4),
                         rs.getString(5)));
             }
-        } catch (ClassNotFoundException e) {
-            throw new DAOException("Class not found");
+//        } catch (ClassNotFoundException e) {
+//            throw new DAOException("Class not found");
         } catch (SQLException e) {
             throw new DAOException("Sql error");
         } finally {
@@ -95,7 +95,7 @@ public class SQLProductDAO implements ProductDao {
         PreparedStatement ps = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(AddProductIntoCart);
             ps.setInt(1, userId);
@@ -105,8 +105,8 @@ public class SQLProductDAO implements ProductDao {
             if (rowNumber == 0){
                 throw new DAOException("Class not found");
             }
-        } catch (ClassNotFoundException e) {
-            throw new DAOException("Class not found");
+//        } catch (ClassNotFoundException e) {
+//            throw new DAOException("Class not found");
         } catch (SQLException e) {
             throw new DAOException("Sql error");
         } finally {

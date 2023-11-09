@@ -1,7 +1,9 @@
 package com.example.wt_laba2.controller;
 
 import com.example.wt_laba2.bean.JSPNameList;
+import com.example.wt_laba2.bean.Product;
 import com.example.wt_laba2.exception.CommandException;
+import com.example.wt_laba2.exception.DAOException;
 import com.example.wt_laba2.logic.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -13,11 +15,22 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.DriverManager;
 
 public class Controller extends HttpServlet {
 
     public Controller() {
         super();
+    }
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver exception");
+        }
     }
 
     @Override
@@ -35,11 +48,11 @@ public class Controller extends HttpServlet {
         } catch (CommandException e) {
             //LOG
             System.out.println("Page exception in Controller " + e.toString());
-            page = "";
+            page = JSPNameList.ERROR_PAGE;
         } catch (Exception e) {
             //LOG
             System.out.println("Exception in Controller " + e.toString());
-            page = "JSPPageName.PAGE_ERROR";
+            page =  JSPNameList.ERROR_PAGE;
         }
 
         RequestDispatcher dispatcher = req.getRequestDispatcher(page);
@@ -60,22 +73,23 @@ public class Controller extends HttpServlet {
         String result = null;
         StringBuffer page = req.getRequestURL();
         ICommand command = CommandHelper.getCommandHelper().getCommand(commandName);
-        try{
+        try {
             result = command.execute(req);
-        }catch (CommandException ex){
-            result = "Error";
-        }catch (Exception ex) {
-            result = "Error";
+        } catch (CommandException ex) {
+            result =  JSPNameList.ERROR_PAGE;
+        } catch (Exception ex) {
+            result =  JSPNameList.ERROR_PAGE;
         }
-        resp.sendRedirect(result);
-//        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
-//        if (dispatcher != null){
-//            dispatcher.forward(req, resp);
-//        } else{
-//            errorMessageDireclyFromresponse(resp);
-//        }
+//        resp.sendRedirect(result);
+        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
+        if (dispatcher != null) {
+            dispatcher.forward(req, resp);
+        } else {
+            errorMessageDireclyFromresponse(resp);
+        }
     }
-    private void errorMessageDireclyFromresponse(HttpServletResponse response) throws IOException{
+
+    private void errorMessageDireclyFromresponse(HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         response.getWriter().println("E R R O R");
     }

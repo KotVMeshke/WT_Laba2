@@ -36,6 +36,6 @@ public class GetProducts implements ICommand {
         }catch (DAOException ex){
             throw new CommandException("Can't get XmlDao",ex);
         }
-        return "MainPage.jsp";
+        return "index.jsp";
     }
 }
