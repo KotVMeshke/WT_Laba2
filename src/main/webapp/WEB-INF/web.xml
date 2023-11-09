@@ -18,23 +18,6 @@
         <servlet-class>com.example.wt_laba2.controller.Controller</servlet-class>
     </servlet>
 
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>default</servlet-name>-->
-<!--        <url-pattern>/resources/*</url-pattern>-->
-<!--    </servlet-mapping>-->
-
-<!--    <servlet>-->
-<!--        <servlet-name>JspServlet</servlet-name>-->
-<!--        <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>JspServlet</servlet-name>-->
-<!--        <url-pattern>/Login.jsp</url-pattern>-->
-<!--        <url-pattern>/SignUp.jsp</url-pattern>-->
-<!--        <url-pattern>/MainPage.jsp</url-pattern>-->
-<!--        <url-pattern>/error.jsp</url-pattern>-->
-<!--    </servlet-mapping>-->
-
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>/</url-pattern>

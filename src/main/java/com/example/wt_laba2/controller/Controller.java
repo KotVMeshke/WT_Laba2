@@ -1,15 +1,14 @@
 package com.example.wt_laba2.controller;
 
+import com.example.wt_laba2.bean.JSPNameList;
 import com.example.wt_laba2.exception.CommandException;
+import com.example.wt_laba2.logic.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.example.wt_laba2.logic.CommandHelper;
-import com.example.wt_laba2.logic.CommandName;
-import com.example.wt_laba2.logic.ICommand;
 
 
 import java.io.IOException;
@@ -23,25 +22,35 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String commandName = req.getParameter(RequestCommandName.COMMAND_NAME);
-        String result = null;
-        try{
-            ICommand command = CommandHelper.getCommandHelper().getCommand(commandName);
+        String requestURI = req.getRequestURI();
+        System.out.println(requestURI);
+        JSPPAge pageContent = JSPHelper.getJspHelper().getPage(requestURI);
+        String page;
 
-            result = command.execute(req);
-        }catch (CommandException ex){
-            result = "Error";
-        }catch (Exception ex) {
-            result = "Error";
+        // LOG
+        System.out.println("URI " + requestURI + " received");
+
+        try {
+            page = pageContent.execute(req);
+        } catch (CommandException e) {
+            //LOG
+            System.out.println("Page exception in Controller " + e.toString());
+            page = "";
+        } catch (Exception e) {
+            //LOG
+            System.out.println("Exception in Controller " + e.toString());
+            page = "JSPPageName.PAGE_ERROR";
         }
 
-//        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
-//        if (dispatcher != null){
-//            dispatcher.forward(req, resp);
-//        } else{
-//            errorMessageDireclyFromresponse(resp);
-//        }
-        resp.sendRedirect(result);
+        RequestDispatcher dispatcher = req.getRequestDispatcher(page);
+
+        if (dispatcher != null) {
+            dispatcher.forward(req, resp);
+        } else {
+            //LOG
+            System.out.println("RequestDispatcher is NULL");
+            errorMessageDireclyFromresponse(resp);
+        }
 
     }
 

@@ -13,7 +13,7 @@
     <title>TechShop</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../Styles/MainPage.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/WEB-INF/Styles/MainPage.css">
 </head>
 <body>
 <div align="right">
