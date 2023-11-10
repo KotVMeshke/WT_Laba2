@@ -37,7 +37,6 @@ public class Controller extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String requestURI = req.getRequestURI();
-        req.getSession().setMaxInactiveInterval(1000);
         System.out.println(requestURI);
         JSPPAge pageContent = JSPHelper.getJspHelper().getPage(requestURI);
         String page;
@@ -73,7 +72,6 @@ public class Controller extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestCommandName.COMMAND_NAME);
         String result = null;
-        req.getSession().setMaxInactiveInterval(1000);
         ICommand command = CommandHelper.getCommandHelper().getCommand(commandName);
         try {
             result = command.execute(req);
