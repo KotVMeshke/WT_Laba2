@@ -1,4 +1,4 @@
-package com.example.wt_laba2.logic.impl;
+package com.example.wt_laba2.Jsp.impl;
 
 import com.example.wt_laba2.bean.JSPNameList;
 import com.example.wt_laba2.bean.Product;

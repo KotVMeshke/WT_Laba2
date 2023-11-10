@@ -15,6 +15,9 @@ public class Product {
         this.fileName = fileName;
     }
 
+    public Product Clone(){
+        return new Product(id,productName,price,category,fileName);
+    }
     public String getProductName() {
         return productName;
     }

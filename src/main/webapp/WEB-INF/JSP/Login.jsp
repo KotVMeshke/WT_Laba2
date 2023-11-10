@@ -72,7 +72,7 @@
 <div class="form-container">
     <div class="login-form">
         <h2>SIGN IN</h2>
-        <form action="Controller" method="post">
+        <form action="TechStore" method="post">
             <label for="Login">Login:</label>
             <input type="text" id="Login" name="Login" required><br>
 
@@ -80,7 +80,6 @@
             <input type="password" id="Password" name="Password" required><br>
 
             <input type="hidden" name="command" value="SIGN_IN" />
-            <label for="sing_in-button">${IncorrectData}</label>
             <input type="submit" id ="sing_in-button" value="Sing in">
 
         </form>

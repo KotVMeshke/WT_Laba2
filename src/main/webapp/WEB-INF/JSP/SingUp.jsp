@@ -114,7 +114,7 @@
 <div class="form-container">
     <div class="registration-form">
         <h2>SING UP</h2>
-        <form action="Controller" method="post">
+        <form action="TechStore" method="post">
             <label for="reg-login">Login:</label>
             <input type="text" id="reg-login" name="Login" required><br>
 
@@ -125,7 +125,6 @@
             <input type="password" id="confirm-password" name="confirm-password" required><br>
 
             <input type="hidden" name="command" value="REGISTER" />
-            <label for="Register-button">${IncorrectData}</label>
             <input type="submit" id ="Register-button" value="Sing up">
 
         </form>

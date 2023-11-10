@@ -8,14 +8,16 @@ import java.util.Map;
 public class CommandHelper {
     private static final CommandHelper commandHelper = new CommandHelper();
 
-    private Map<CommandName, ICommand> commands = new HashMap<>();
+    private final Map<CommandName, ICommand> commands = new HashMap<>();
 
     public CommandHelper(){
         commands.put(CommandName.SIGN_IN, new SignIn());
         commands.put(CommandName.REGISTER, new Register());
         commands.put(CommandName.DISPLAY_PRODUCTS, new GetProducts());
         commands.put(CommandName.ADD_TO_CART, new AddProductIntoCart());
-        commands.put(CommandName.TO_PAGE, new PageChanger());
+        commands.put(CommandName.EXIT, new LogOut());
+        commands.put(CommandName.REMOVE_FROM_CART, new RemoveProductFromCart());
+        commands.put(CommandName.PROCESS_ORDER, new ProcessOrder());
     }
 
     public static CommandHelper getCommandHelper(){

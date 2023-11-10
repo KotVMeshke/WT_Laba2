@@ -1,6 +1,7 @@
 package com.example.wt_laba2.logic;
 
-import com.example.wt_laba2.logic.impl.*;
+import com.example.wt_laba2.Jsp.impl.ErrorPage;
+import com.example.wt_laba2.Jsp.impl.MainPage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class JSPHelper {
 
     public JSPHelper() {
         pages.put(JSPName.MAIN_PAGE, new MainPage());
-        pages.put(JSPName.ERROR_PAGE, null);
+        pages.put(JSPName.ERROR_PAGE, new ErrorPage());
 
     }
 

@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Styles/MainPageStyles.css">
+<%--    <link rel="stylesheet" href="Styles/MainPageStyles.css">--%>
     <title>TechShop</title>
 </head>
 <style>
@@ -25,13 +25,26 @@
         text-align: center;
         width: 100%;
     }
+    .view-cart-button, .add-to-cart-button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .view-cart-button:hover, .add-to-cart-button:hover {
+        background-color: #45a049;
+    }
 
     .buttons{
         display: flex;
         justify-content: space-between;
         padding-right: 5%;
         width: 10%;
-        border: red 2px solid;
+        /*border: red 2px solid;*/
         height: 100%;
     }
     .header {
@@ -49,20 +62,36 @@
         font-size: 24px;
     }
 
-    .signin {
+    /*.signin {*/
+    /*    background-color: #2f2e2e;*/
+    /*    width:130%;*/
+    /*    height: 140%;*/
+    /*    color: white;*/
+    /*}*/
+
+    /*.signup {*/
+    /*    width:130%;*/
+    /*    height: 140%;*/
+    /*    background-color: #2f2e2e;*/
+    /*    color: white;*/
+    /*}*/
+
+    .signin, .signup {
+        width:90%;
+        height: 90%;
+        font-size: 18px; /* Set the font size according to your preference */
+        margin: 10px; /* Set the margin according to your preference */
         background-color: #2f2e2e;
-        width:100%;
-        height: 100%;
         color: white;
+        border: none;
+        border-radius: 25px; /* Add rounded corners */
+        cursor: pointer;
+        transition: background-color 0.3s ease; /* Add smooth transition for hover effect */
     }
 
-    .signup {
-        width:100%;
-        height: 100%;
-        background-color: #2f2e2e;
-        color: white;
+    .signin:hover, .signup:hover {
+        background-color: #555; /* Change background color on hover */
     }
-
     body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
@@ -187,16 +216,15 @@
             </c:when>
             <c:otherwise>
                 <div class="buttons">
-                    <form action="Controller" method="get">
+                    <form action="TechStore" method="post">
                         <input type="hidden" name="command" value="EXIT"/>
-                        <input type="hidden" name="page_name" value="JSP/Login.jsp"/>
                         <input type="submit" class="signin" value="Log out">
                     </form>
                     <c:if test="${sessionScope.isAdmin == 'Administrator'}">
-                        <form action="Controller" method="get">
+                        <form action="TechStore" method="get">
                             <input type="hidden" name="command" value="TO_PAGE"/>
                             <input type="hidden" name="page_name" value="JSP/Administrator.jsp"/>
-                            <input type="submit" class="signup" value="Administrator">
+                            <input type="submit" class="signup" value="Admin">
                         </form>
                     </c:if>
 
@@ -210,7 +238,7 @@
 </div>
 
 
-<form action="Controller" method="post">
+<form action="TechStore" method="post">
     <input type="hidden" name="command" value="DISPLAY_PRODUCTS"/>
 
     <label for="category">Category:</label>
@@ -218,9 +246,15 @@
 
     <button type="submit">Show List</button>
 </form>
+
+<c:if test="${not empty sessionScope.UserId}">
+<form action="ShoppingCart" method="get">
+    <button type="submit" class="view-cart-button">View Cart</button>
+</form>
+</c:if>
 <div class="container">
     <h1>Product List</h1>
-    <c:forEach var="product" items="${sessionScope.products}">
+    <c:forEach var="product" items="${products}">
         <div class="product-box">
             <h2>${product.productName}</h2>
             <img src="${product.fileName}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">
@@ -228,7 +262,7 @@
             <p>Category: ${product.category}</p>
 
             <c:if test="${not empty sessionScope.UserId}">
-            <form action="Controller" method="post">
+            <form action="TechStore" method="post">
                 <input type="hidden" name="command" value="ADD_TO_CART">
                 <input type="hidden" name="productId" value="${product.id}">
                 <button type="submit">Add to cart</button>
