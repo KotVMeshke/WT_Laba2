@@ -58,6 +58,14 @@
         <servlet-name>CheckoutOrder</servlet-name>
         <url-pattern>/Checkout</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Administrator</servlet-name>
+        <jsp-file>/WEB-INF/JSP/Administrator.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Administrator</servlet-name>
+        <url-pattern>/Administrator</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>1000</session-timeout>
     </session-config>

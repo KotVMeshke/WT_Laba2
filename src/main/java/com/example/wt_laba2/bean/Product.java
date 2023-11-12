@@ -7,19 +7,30 @@ public class Product {
     public String category;
     public String fileName;
 
-    public Product(int id, String productName, String price, String category, String fileName) {
+
+    public int discount;
+
+    public Product(int id, String productName, String price,int discount, String category, String fileName) {
         this.id = id;
         this.productName = productName;
         this.price = price;
+        this.discount = discount;
         this.category = category;
         this.fileName = fileName;
     }
 
     public Product Clone(){
-        return new Product(id,productName,price,category,fileName);
+        return new Product(id,productName,price,discount,category,fileName);
     }
     public String getProductName() {
         return productName;
+    }
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
     }
 
     public void setProductName(String productName) {

@@ -18,6 +18,10 @@ public class CommandHelper {
         commands.put(CommandName.EXIT, new LogOut());
         commands.put(CommandName.REMOVE_FROM_CART, new RemoveProductFromCart());
         commands.put(CommandName.PROCESS_ORDER, new ProcessOrder());
+        commands.put(CommandName.SET_DISCOUNT, new SetDiscount());
+        commands.put(CommandName.SET_BAN, new SetBan());
+        commands.put(CommandName.REMOVE_BAN, new RemoveBan());
+        commands.put(CommandName.ADD_PRODUCT, new AddProduct());
     }
 
     public static CommandHelper getCommandHelper(){

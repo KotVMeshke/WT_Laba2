@@ -32,7 +32,7 @@ public class SQLOrderDAO implements OrderDao {
     public static float CalculateOrderPrice(List<CartItem> cart){
         float result = 0;
         for (CartItem cartItem : cart) {
-            result += cartItem.getAmount() * Float.parseFloat(cartItem.getProduct().getPrice());
+            result += cartItem.getAmount() * Float.parseFloat(cartItem.getProduct().getPrice())*(100-cartItem.getProduct().getDiscount())/100;
         }
         return result;
     }

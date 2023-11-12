@@ -1,22 +1,20 @@
 package com.example.wt_laba2.controller;
 
 import com.example.wt_laba2.bean.JSPNameList;
-import com.example.wt_laba2.bean.Product;
 import com.example.wt_laba2.exception.CommandException;
-import com.example.wt_laba2.exception.DAOException;
 import com.example.wt_laba2.logic.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.DriverManager;
 
+@MultipartConfig
 public class Controller extends HttpServlet {
 
     public Controller() {
@@ -71,6 +69,12 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestCommandName.COMMAND_NAME);
+        if (commandName == null){
+            Part filePart = req.getPart("productImage");
+            Part commandPart = req.getPart(RequestCommandName.COMMAND_NAME);
+            commandName = commandPart.getInputStream().toString();
+        }
+        String so = req.getParameter("productName");
         String result = null;
         ICommand command = CommandHelper.getCommandHelper().getCommand(commandName);
         try {

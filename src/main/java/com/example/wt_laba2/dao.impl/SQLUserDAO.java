@@ -12,6 +12,12 @@ public class SQLUserDAO implements UserDao {
     private static String registerNewUser = "INSERT INTO user (idUser, UserLogin, UserPasswordHash,role,ban) Values (null, ?,?,?,?)";
     private static String checkIfUserExist = "Select * from user where userLogin = ? and UserPasswordHash = ?";
     private static String getUserId = "Select idUser, role from user where UserLogin = ?";
+    private static String setBan = "Update user " +
+            "set ban = true " +
+            "where idUser = ?";
+    private static String removeBan = "Update user " +
+            "set ban = false " +
+            "where idUser = ?";
     private static String connectorDB ="jdbc:mysql://localhost:3306/mydb?serverTimezone=Europe/Moscow&useSSL=false";
     @Override
     public int hashCode() {
@@ -99,5 +105,53 @@ public class SQLUserDAO implements UserDao {
             }
         }
         return result;
+    }
+
+    @Override
+    public void SetBan(int userId) throws DAOException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            ps = con.prepareStatement(setBan);
+            ps.setInt(1,userId);
+            int columNumber = ps.executeUpdate();
+            if (columNumber < 1){
+                throw new DAOException("User with this id: " + String.valueOf(userId) + " doesn't exist");
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Sql error");
+        } finally {
+            try {
+                if (con != null) {con.close();}
+                if (ps != null) {ps.close();}
+            } catch (SQLException e) {
+                throw new DAOException("SQl connection close error", e);
+            }
+        }
+    }
+
+    @Override
+    public void removeBan(int userId) throws DAOException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            ps = con.prepareStatement(removeBan);
+            ps.setInt(1,userId);
+            int columNumber = ps.executeUpdate();
+            if (columNumber < 1){
+                throw new DAOException("User with this id: " + String.valueOf(userId) + " doesn't exist");
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Sql error");
+        } finally {
+            try {
+                if (con != null) {con.close();}
+                if (ps != null) {ps.close();}
+            } catch (SQLException e) {
+                throw new DAOException("SQl connection close error", e);
+            }
+        }
     }
 }

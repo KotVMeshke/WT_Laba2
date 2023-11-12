@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -221,9 +223,7 @@
                         <input type="submit" class="signin" value="Log out">
                     </form>
                     <c:if test="${sessionScope.isAdmin == 'Administrator'}">
-                        <form action="TechStore" method="get">
-                            <input type="hidden" name="command" value="TO_PAGE"/>
-                            <input type="hidden" name="page_name" value="JSP/Administrator.jsp"/>
+                        <form action="Administrator" method="get">
                             <input type="submit" class="signup" value="Admin">
                         </form>
                     </c:if>
@@ -258,7 +258,17 @@
         <div class="product-box">
             <h2>${product.productName}</h2>
             <img src="${product.fileName}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">
-            <p>Price: ${product.price}</p>
+            <c:choose>
+                <c:when test="${product.discount == 0 or empty product.discount}">
+                    <p>Price: ${product.price}</p>
+                </c:when>
+                <c:otherwise>
+                    <fmt:formatNumber var="roundedValue" value="${product.price*(100-product.discount)/100}" pattern="#,##0.00" />
+                    <p>Price: <del>${product.price}</del> <span style="color: red;">${roundedValue}</span></p>
+                </c:otherwise>
+            </c:choose>
+
+
             <p>Category: ${product.category}</p>
 
             <c:if test="${not empty sessionScope.UserId}">

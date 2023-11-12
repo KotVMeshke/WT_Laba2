@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -129,7 +130,17 @@
     <div class="product-box">
         <h2>${CartItem.product.productName}</h2>
         <img src="${CartItem.product.fileName}" alt="${CartItem.product.productName}" style="max-width: 200px; max-height: 200px;">
-        <p>Price: ${CartItem.product.price}</p>
+        <c:choose>
+            <c:when test="${CartItem.product.discount == 0 or empty CartItem.product.discount}">
+                <p>Price: ${CartItem.product.price}</p>
+            </c:when>
+            <c:otherwise>
+                <fmt:formatNumber var="roundedValue" value="${CartItem.product.price*(100-CartItem.product.discount)/100}" pattern="#,##0.00" />
+                <%--                    <p>Price: <del>${product.price}</del> <span style="color: red;">${fn:round(product.price*(100-product.discount)/100, 2)}</span></p>--%>
+                <p>Price: <del>${CartItem.product.price}</del> <span style="color: red;">${roundedValue}</span></p>
+            </c:otherwise>
+        </c:choose>
+
         <p>Category: ${CartItem.product.category}</p>
         <p>Quantity: ${CartItem.amount}</p>
 
