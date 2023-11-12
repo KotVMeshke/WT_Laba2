@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8" %>
+<%@ page import="java.util.Base64" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -257,7 +258,9 @@
     <c:forEach var="product" items="${products}">
         <div class="product-box">
             <h2>${product.productName}</h2>
-            <img src="${product.fileName}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">
+<%--            <img src="${product.fileName}" alt="${product.productName}" style="max-width: 200px; max-height: 200px;">--%>
+<%--            <img src="data:image/jpeg;base64,${fn:escapeXml(Base64.getMimeEncoder().encodeToString(product.image))}" alt="Image">--%>
+            <img src="data:image/jpg;base64,${product.image}" alt="" width="240" height="300"/>
             <c:choose>
                 <c:when test="${product.discount == 0 or empty product.discount}">
                     <p>Price: ${product.price}</p>

@@ -14,39 +14,26 @@ import java.util.List;
 public class SQLProductDAO implements ProductDao {
 
     private static final String connectorDB = "jdbc:mysql://localhost:3306/mydb?serverTimezone=Europe/Moscow&useSSL=false";
-    private static final String GetProductsByCat = "Select pro_id, pro_name, pro_price,pro_discount ,cat_name,med_filename from product " +
-            "join product_category on cat_id = pro_cat join media on med_id = pro_med where cat_name = ?";
-    private static final String AddProductIntoCart = "Insert into cart " +
-            "(crt_user, crt_product, crt_amount) " +
-            "values (?,?,?)";
+    private static final String GetProductsByCat = "Select pro_id, pro_name, pro_price,pro_discount ,cat_name, pro_image from product " +
+            "join product_category on cat_id = pro_cat where cat_name = ?";
+
 
     private static final String AddDiscount = "Update product " +
             "set pro_discount = ? " +
             "where pro_name = ?";
-    private static final String GetAllProducts = "Select pro_id, pro_name, pro_price,pro_discount, cat_name,med_filename from product " +
-            "join product_category on cat_id = pro_cat join media on med_id = pro_med";
+    private static final String GetAllProducts = "Select pro_id, pro_name, pro_price,pro_discount, cat_name,pro_image from product " +
+            "join product_category on cat_id = pro_cat ";
 
-    private static final String GetProductsFromCart = "Select pro_id, pro_name, pro_price, cat_name,med_filename,crt_amount" +
-            "from cart" +
-            "join product" +
-            "on pro_id = crt_product " +
-            "join product_category" +
-            "on cat_id = pro_cat" +
-            "join media" +
-            "on pro_med = med_id where usr_id = ?";
-
-    private static final String GetProductById = "Select pro_id, pro_name, pro_price,pro_discount, cat_name,med_filename " +
+    private static final String GetProductById = "Select pro_id, pro_name, pro_price,pro_discount, cat_name,pro_image " +
             "from product " +
             "join product_category " +
             "on cat_id = pro_cat " +
-            "join media " +
-            "on med_id = pro_med " +
             "where pro_id = ?";
 
     private static final String AddProduct = "Insert into product " +
-            "(pro_id, pro_name, pro_price, pro_discount, pro_image, pro_cat, pro_med)" +
+            "(pro_id, pro_name, pro_price, pro_discount, pro_cat,pro_image)" +
             "Values " +
-            "(null, ?, ?, DEFAULT, ?, ?, ?)";
+            "(null, ?, ?, DEFAULT, ?, ?)";
 
     private static final String GetCategoryByName = "Select cat_id from product_category where cat_name = ?";
 
@@ -64,12 +51,15 @@ public class SQLProductDAO implements ProductDao {
             ps.setString(1, category);
             rs = ps.executeQuery();
             while (rs.next()) {
+                Blob blob = rs.getBlob("pro_image");
+                if (blob == null)
+                    continue;
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getInt(4),
                         rs.getString(5),
-                        rs.getString(6)));
+                        blob.getBytes(1,(int)blob.length())));
             }
         } catch (SQLException e) {
             throw new DAOException("Sql error");
@@ -104,12 +94,15 @@ public class SQLProductDAO implements ProductDao {
             st = con.createStatement();
             rs = st.executeQuery(GetAllProducts);
             while (rs.next()) {
+                Blob blob = rs.getBlob("pro_image");
+                if (blob == null)
+                    continue;
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getInt(4),
                         rs.getString(5),
-                        rs.getString(6)));
+                        blob.getBytes(1,(int)blob.length())));
             }
 //        } catch (ClassNotFoundException e) {
 //            throw new DAOException("Class not found");
@@ -131,83 +124,6 @@ public class SQLProductDAO implements ProductDao {
             }
         }
         return list;
-    }
-
-    @Override
-    public List<CartItem> GetProductsFromCart() throws DAOException {
-
-        List<CartItem> list = new ArrayList<>();
-        Connection con = null;
-        Statement st = null;
-        ResultSet rs = null;
-        PreparedStatement ps = null;
-        try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
-            st = con.createStatement();
-            rs = st.executeQuery(GetProductsFromCart);
-            while (rs.next()) {
-//                list.add(new CartItem(new Product(rs.getInt(1),
-//                        rs.getString(2),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getString(5)), rs.getInt(6)));
-            }
-//        } catch (ClassNotFoundException e) {
-//            throw new DAOException("Class not found");
-        } catch (SQLException e) {
-            throw new DAOException("Sql error");
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("SQl connection close error", e);
-            }
-        }
-        return list;
-
-    }
-
-    @Override
-    public void AddProductIntoCart(int productId, int userId, int amount) throws DAOException {
-        Connection con = null;
-        PreparedStatement ps = null;
-
-        try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
-            ps = con.prepareStatement(AddProductIntoCart);
-            ps.setInt(1, userId);
-            ps.setInt(2, productId);
-            ps.setInt(3, amount);
-            int rowNumber = ps.executeUpdate();
-            if (rowNumber == 0) {
-                throw new DAOException("Class not found");
-            }
-//        } catch (ClassNotFoundException e) {
-//            throw new DAOException("Class not found");
-        } catch (SQLException e) {
-            throw new DAOException("Sql error");
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException("SQl connection close error", e);
-            }
-        }
     }
 
     @Override
@@ -261,9 +177,8 @@ public class SQLProductDAO implements ProductDao {
             ps = con.prepareStatement(AddProduct);
             ps.setString(1,name);
             ps.setString(2,price);
-            ps.setBlob(3,file);
-            ps.setInt(4,categoryNumber);
-            ps.setInt(5,0);
+            ps.setInt(3,categoryNumber);
+            ps.setBlob(4,file);
             int rowNumber = ps.executeUpdate();
             if (rowNumber == 0) {
                 throw new DAOException("Product add exception");
@@ -299,13 +214,13 @@ public class SQLProductDAO implements ProductDao {
             ps = con.prepareStatement(GetProductById);
             ps.setInt(1, id);
             rs = ps.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 product = new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getInt(4),
                         rs.getString(5),
-                        rs.getString(6));
+                        rs.getBytes(6));
             }
         } catch (SQLException e) {
             throw new DAOException("Sql error");

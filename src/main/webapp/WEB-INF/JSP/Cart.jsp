@@ -129,7 +129,7 @@
 <c:forEach var="CartItem" items="${sessionScope.cart}">
     <div class="product-box">
         <h2>${CartItem.product.productName}</h2>
-        <img src="${CartItem.product.fileName}" alt="${CartItem.product.productName}" style="max-width: 200px; max-height: 200px;">
+        <img src="data:image/jpg;base64,${CartItem.product.image}" alt="" width="240" height="300"/>
         <c:choose>
             <c:when test="${CartItem.product.discount == 0 or empty CartItem.product.discount}">
                 <p>Price: ${CartItem.product.price}</p>

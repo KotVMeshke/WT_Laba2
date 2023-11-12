@@ -11,8 +11,6 @@ import java.util.List;
 public interface ProductDao {
     List<Product> GetProductListByCat(String category) throws DAOException;
     List<Product> GetAllProduct() throws DAOException;
-    List<CartItem> GetProductsFromCart() throws DAOException;
-    void AddProductIntoCart(int productId, int userId, int amount) throws DAOException;
 
     void SetDiscount(int productId, int discountSize) throws DAOException;
 
