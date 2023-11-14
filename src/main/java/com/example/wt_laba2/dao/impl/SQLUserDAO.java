@@ -20,6 +20,8 @@ public class SQLUserDAO implements UserDao {
     private static String removeBan = "Update user " +
             "set ban = false " +
             "where idUser = ?";
+
+    private static String checkBan = "Select ban from user where idUser = ?";
     private static String connectorDB ="jdbc:mysql://localhost:3306/mydb?serverTimezone=Europe/Moscow&useSSL=false";
     @Override
     public int hashCode() {
@@ -42,6 +44,7 @@ public class SQLUserDAO implements UserDao {
             if (!rs.next()) {
                 throw new SQLException("Incorrect login or password");
             }
+
             ps = con.prepareStatement(getUserId);
             ps.setString(1,login);
             rs = ps.executeQuery();
@@ -51,6 +54,14 @@ public class SQLUserDAO implements UserDao {
             {
                 user.setId(rs.getInt(1));
                 user.setRole(rs.getString(2));
+            }
+            ps = con.prepareStatement(checkBan);
+            ps.setInt(1,user.getId());
+            rs = ps.executeQuery();
+            if (rs.next()){
+                if (rs.getBoolean(1)){
+                    throw new DAOException("You were banned");
+                }
             }
         } catch (SQLException e) {
             throw new DAOException("Sql error");
