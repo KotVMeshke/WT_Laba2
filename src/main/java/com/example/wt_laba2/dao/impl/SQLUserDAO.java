@@ -4,6 +4,8 @@ import com.example.wt_laba2.bean.User;
 import com.example.wt_laba2.bean.UserRoles;
 import com.example.wt_laba2.dao.UserDao;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.factory.ConnectionPoolFactory;
+import com.example.wt_laba2.pool.ConnectionPool;
 
 import java.sql.*;
 
@@ -26,13 +28,13 @@ public class SQLUserDAO implements UserDao {
 
     @Override
     public User signIn(String login, String password) throws DAOException {
-        ResultSet rs = null;
-        Connection con = null;
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs = null;
         User user = new User();
         try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            con = connectionPool.getConnection();
             ps = con.prepareStatement(checkIfUserExist);
             ps.setString(1, login);
             ps.setString(2, User.getHashSha512Password(password));
@@ -50,15 +52,13 @@ public class SQLUserDAO implements UserDao {
                 user.setId(rs.getInt(1));
                 user.setRole(rs.getString(2));
             }
-//        } catch (ClassNotFoundException e) {
-//            throw new DAOException("Class not found");
         } catch (SQLException e) {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {con.close();}
-                if (ps != null) {ps.close();}
-                if(rs != null) {rs.close();}
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closeResultSet(rs);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }
@@ -69,13 +69,13 @@ public class SQLUserDAO implements UserDao {
 
     @Override
     public int registration(User user) throws DAOException {
-        Connection con = null;
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs = null;
         int result = -1;
-        ResultSet rs= null;
         try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            con = connectionPool.getConnection();
             ps = con.prepareStatement(registerNewUser);
             ps.setString(1, user.getLogin());
             ps.setString(2, User.getHashSha512Password(user.getPassword()));
@@ -91,15 +91,13 @@ public class SQLUserDAO implements UserDao {
             {
                 result = rs.getInt(1);
             }
-//        } catch (ClassNotFoundException e) {
-//            throw new DAOException("Class not found");
         } catch (SQLException e) {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {con.close();}
-                if (ps != null) {ps.close();}
-                if (rs != null) {rs.close();}
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closeResultSet(rs);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }
@@ -109,9 +107,11 @@ public class SQLUserDAO implements UserDao {
 
     @Override
     public void SetBan(int userId) throws DAOException {
-        Connection con = null;
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
+        Connection con = null;
         try {
+            con = connectionPool.getConnection();
             con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(setBan);
             ps.setInt(1,userId);
@@ -123,8 +123,8 @@ public class SQLUserDAO implements UserDao {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {con.close();}
-                if (ps != null) {ps.close();}
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }
@@ -133,9 +133,11 @@ public class SQLUserDAO implements UserDao {
 
     @Override
     public void removeBan(int userId) throws DAOException {
-        Connection con = null;
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
+        Connection con = null;
         try {
+            con = connectionPool.getConnection();
             con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(removeBan);
             ps.setInt(1,userId);
@@ -147,8 +149,8 @@ public class SQLUserDAO implements UserDao {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {con.close();}
-                if (ps != null) {ps.close();}
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }

@@ -5,6 +5,8 @@ import com.example.wt_laba2.bean.Product;
 import com.example.wt_laba2.bean.User;
 import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.factory.ConnectionPoolFactory;
+import com.example.wt_laba2.pool.ConnectionPool;
 
 import java.io.InputStream;
 import java.sql.*;
@@ -40,13 +42,12 @@ public class SQLProductDAO implements ProductDao {
     @Override
     public List<Product> GetProductListByCat(String category) throws DAOException {
         List<Product> list = new ArrayList<>();
-        Connection con = null;
-        Statement st = null;
-        ResultSet rs = null;
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs = null;
         try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            con = connectionPool.getConnection();
             ps = con.prepareStatement(GetProductsByCat);
             ps.setString(1, category);
             rs = ps.executeQuery();
@@ -65,15 +66,9 @@ public class SQLProductDAO implements ProductDao {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {
-                    con.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (rs != null) {
-                    rs.close();
-                }
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closeResultSet(rs);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }
@@ -84,13 +79,12 @@ public class SQLProductDAO implements ProductDao {
     @Override
     public List<Product> GetAllProduct() throws DAOException {
         List<Product> list = new ArrayList<>();
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         Connection con = null;
         Statement st = null;
         ResultSet rs = null;
-        PreparedStatement ps = null;
         try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            con = connectionPool.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(GetAllProducts);
             while (rs.next()) {
@@ -110,15 +104,9 @@ public class SQLProductDAO implements ProductDao {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {
-                    con.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (rs != null) {
-                    rs.close();
-                }
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closeResultSet(rs);
+                ConnectionPool.closeStatement(st);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }
@@ -128,11 +116,11 @@ public class SQLProductDAO implements ProductDao {
 
     @Override
     public void SetDiscount(int productId, int discountSize) throws DAOException {
-        Connection con = null;
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
-
+        Connection con = null;
         try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = connectionPool.getConnection();
             con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(AddDiscount);
             ps.setInt(1, discountSize);
@@ -145,12 +133,8 @@ public class SQLProductDAO implements ProductDao {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {
-                    con.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }
@@ -159,13 +143,13 @@ public class SQLProductDAO implements ProductDao {
 
     @Override
     public void AddProduct(String name,String price, String category, InputStream file) throws DAOException {
-        Connection con = null;
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
+        Connection con = null;
         ResultSet rs = null;
-        int categoryNumber = 0;
+        int categoryNumber;
         try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            con = connectionPool.getConnection();
             ps = con.prepareStatement(GetCategoryByName);
             ps.setString(1,category);
             rs = ps.executeQuery();
@@ -187,15 +171,9 @@ public class SQLProductDAO implements ProductDao {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {
-                    con.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (rs != null) {
-                    rs.close();
-                }
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closeResultSet(rs);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }
@@ -204,13 +182,13 @@ public class SQLProductDAO implements ProductDao {
 
     @Override
     public Product GetProductById(int id) throws DAOException {
-        Connection con = null;
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
-        Product product = null;
+        Connection con = null;
         ResultSet rs = null;
+        Product product = null;
         try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            con = connectionPool.getConnection();
             ps = con.prepareStatement(GetProductById);
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -226,15 +204,9 @@ public class SQLProductDAO implements ProductDao {
             throw new DAOException("Sql error");
         } finally {
             try {
-                if (con != null) {
-                    con.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (rs != null) {
-                    rs.close();
-                }
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closeResultSet(rs);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }

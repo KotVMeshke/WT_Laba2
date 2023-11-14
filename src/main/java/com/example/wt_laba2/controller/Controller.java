@@ -2,7 +2,9 @@ package com.example.wt_laba2.controller;
 
 import com.example.wt_laba2.bean.JSPNameList;
 import com.example.wt_laba2.exception.CommandException;
+import com.example.wt_laba2.factory.ConnectionPoolFactory;
 import com.example.wt_laba2.logic.*;
+import com.example.wt_laba2.pool.ConnectionPool;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.Part;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @MultipartConfig
 public class Controller extends HttpServlet {
@@ -25,10 +28,14 @@ public class Controller extends HttpServlet {
     public void init() throws ServletException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-
+            ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
+            connectionPool.CreateConnections();
 
         } catch (ClassNotFoundException e) {
             System.out.println("Driver exception");
+        }catch (SQLException ex){
+            System.out.println("Connection creation was incorrect");
+
         }
     }
 
@@ -69,11 +76,6 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestCommandName.COMMAND_NAME);
-        if (commandName == null){
-            Part filePart = req.getPart("productImage");
-            Part commandPart = req.getPart(RequestCommandName.COMMAND_NAME);
-            commandName = commandPart.getInputStream().toString();
-        }
         String so = req.getParameter("productName");
         String result = null;
         ICommand command = CommandHelper.getCommandHelper().getCommand(commandName);

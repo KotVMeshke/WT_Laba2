@@ -4,6 +4,8 @@ import com.example.wt_laba2.bean.CartItem;
 import com.example.wt_laba2.bean.Product;
 import com.example.wt_laba2.dao.OrderDao;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.factory.ConnectionPoolFactory;
+import com.example.wt_laba2.pool.ConnectionPool;
 
 import java.sql.*;
 import java.util.List;
@@ -17,13 +19,6 @@ public class SQLOrderDAO implements OrderDao {
             "(null, DEFAULT,?,?, Default) ";
 
     public static final String GetAddedOrderID = "SELECT max(ord_id) from orders";
-
-    private static Connection con = null;
-    private static PreparedStatement ps = null;
-
-    private static Statement st = null;
-    private static ResultSet rs = null;
-
     public static final String AddOrderProduct = "INSERT INTO order_product " +
             "(op_product, op_order, op_amount) " +
             "VALUES " +
@@ -38,8 +33,14 @@ public class SQLOrderDAO implements OrderDao {
     }
     @Override
     public void CreateOrder(String address, List<CartItem> cart) throws DAOException {
+        ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
+        PreparedStatement ps = null;
+        Connection con = null;
+        Statement st = null;
+        ResultSet rs = null;
         try {
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
+            con = connectionPool.getConnection();
+
             ps = con.prepareStatement(CreateOrder);
             ps.setFloat(1, CalculateOrderPrice(cart));
             ps.setString(2, address);
@@ -62,16 +63,10 @@ public class SQLOrderDAO implements OrderDao {
         } catch (SQLException e) {
             throw new DAOException("Sql error");
         } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
+            try{
+                connectionPool.releaseConnection(con);
+                ConnectionPool.closeResultSet(rs);
+                ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
                 throw new DAOException("SQl connection close error", e);
             }
