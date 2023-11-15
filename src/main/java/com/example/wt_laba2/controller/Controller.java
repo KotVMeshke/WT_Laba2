@@ -18,6 +18,11 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Servlet implementation class Controller.
+ * <p>
+ * Manages HTTP requests and responses for the application.
+ */
 @MultipartConfig
 public class Controller extends HttpServlet {
 
@@ -25,7 +30,13 @@ public class Controller extends HttpServlet {
         super();
     }
 
-    private static final Logger logger = LogManager.getLogger(Controller.class);
+//    private static Logger logger = LogManager.getLogger(Controller.class);
+    /**
+     * Initializes the servlet.
+     * Establishes the database connection pool.
+     *
+     * @throws ServletException if an error occurs during initialization
+     */
     @Override
     public void init() throws ServletException {
         try {
@@ -40,9 +51,18 @@ public class Controller extends HttpServlet {
 
         }
     }
-
+    /**
+     * Handles HTTP GET requests.
+     * Retrieves the requested page content and forwards the request to the appropriate JSP page.
+     *
+     * @param req  the HttpServletRequest object
+     * @param resp the HttpServletResponse object
+     * @throws ServletException if an error occurs while processing the request
+     * @throws IOException      if an I/O error occurs while handling the request
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        logger.info("Aboba");
         String requestURI = req.getRequestURI();
         System.out.println(requestURI);
         JSPPAge pageContent = JSPHelper.getJspHelper().getPage(requestURI);
@@ -75,6 +95,15 @@ public class Controller extends HttpServlet {
 
     }
 
+    /**
+     * Handles HTTP POST requests.
+     * Executes the requested command and forwards the request to the appropriate result page.
+     *
+     * @param req  the HttpServletRequest object
+     * @param resp the HttpServletResponse object
+     * @throws ServletException if an error occurs while processing the request
+     * @throws IOException      if an I/O error occurs while handling the request
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestCommandName.COMMAND_NAME);
@@ -98,7 +127,12 @@ public class Controller extends HttpServlet {
             errorMessageDireclyFromresponse(resp);
         }
     }
-
+    /**
+     * Sends an error message directly in the response if the dispatcher is null.
+     *
+     * @param response the HttpServletResponse object
+     * @throws IOException if an I/O error occurs while writing the error message
+     */
     private void errorMessageDireclyFromresponse(HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         response.getWriter().println("E R R O R");

@@ -1,5 +1,8 @@
 package com.example.wt_laba2.logic;
-
+/**
+ * The CommandName enum represents different commands available in the application.
+ * Each enum constant corresponds to a specific command that can be executed.
+ */
 public enum CommandName {
     REGISTER,
     SIGN_IN,

@@ -15,27 +15,46 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The SetDiscount class implements ICommand to handle setting discounts for products.
+ * It interacts with the ProductDao to set a discount for a specific product based on the provided information.
+ */
 public class SetDiscount implements ICommand {
+
+    /**
+     * Executes the action to set a discount for a product based on the provided HttpServletRequest.
+     *
+     * @param request The HttpServletRequest containing information about the product and discount setting.
+     * @return A String representing the JSP name to navigate after setting the discount.
+     * @throws CommandException           If an error occurs while executing the discount setting action.
+     * @throws ParserConfigurationException If there's an issue with the parser configuration.
+     * @throws IOException                If an I/O exception occurs during execution.
+     * @throws DAOException               If there's an issue with the Data Access Object.
+     */
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
         ProductDao productDao = null;
         try {
-            String address = request.getParameter("address");
             productDao = DAOFactory.getFactory().getProductDao();
             int productId = Integer.parseInt(request.getParameter("discountProductId"));
             if (productId == 0)
-                throw new CommandException("Incorrect product id");
+                throw new CommandException("Incorrect product ID");
+
             String discount = request.getParameter("discountAmount");
             int discountValue = Integer.parseInt(discount);
+
+            // Limit the discount value between 0 and 100
             if (discountValue < 0) {
                 discountValue = 0;
-            }else if (discountValue > 100){
+            } else if (discountValue > 100) {
                 discountValue = 100;
             }
-            productDao.SetDiscount(productId,discountValue );
-        }catch (DAOException ex){
-            throw new CommandException("Can't get XmlDao",ex);
-        };
+
+            productDao.SetDiscount(productId, discountValue);
+        } catch (DAOException ex) {
+            throw new CommandException("Error occurred while setting the discount.", ex);
+        }
         return JSPNameList.ADMINISTRATOR_PAGE;
     }
 }
+

@@ -14,28 +14,40 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 
+/**
+ * The Register class implements ICommand to handle user registration functionality.
+ * It interacts with the UserDao to register a new user based on provided information.
+ */
 public class Register implements ICommand {
+
+    /**
+     * Executes the action to register a new user based on the provided HttpServletRequest.
+     *
+     * @param request The HttpServletRequest containing information about the user registration.
+     * @return A String representing the JSP name to navigate after registering the user.
+     * @throws CommandException           If an error occurs while executing the user registration action.
+     */
     @Override
-    public String execute(HttpServletRequest request)throws CommandException {
+    public String execute(HttpServletRequest request) throws CommandException {
         User user = new User();
         UserDao userDao = null;
         try {
             userDao = DAOFactory.getFactory().getUserDao();
             user.setLogin(request.getParameter("Login"));
             user.setPassword(request.getParameter("Password"));
-            if (user.getPassword().equals(request.getParameter("confirm-password"))){
+            if (user.getPassword().equals(request.getParameter("confirm-password"))) {
                 int userId = userDao.registration(user);
-                request.setAttribute("SomeMessage","Successful registration");
-                request.getSession().setAttribute(SessionAtributes.Authorized,true);
+                request.setAttribute("SomeMessage", "Successful registration");
+                request.getSession().setAttribute(SessionAtributes.Authorized, true);
                 request.getSession().setAttribute(SessionAtributes.UserId, userId);
-            }else
-            {
+            } else {
                 request.setAttribute("IncorrectData", "Passwords are not the same");
             }
 
-        }catch (DAOException ex){
-            throw new CommandException("Can't get XmlDao",ex);
+        } catch (DAOException ex) {
+            throw new CommandException("Error occurred during user registration.", ex);
         }
         return JSPNameList.MAIN_PAGE;
     }
 }
+

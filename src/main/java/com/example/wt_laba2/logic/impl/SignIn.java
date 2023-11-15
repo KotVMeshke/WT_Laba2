@@ -15,22 +15,39 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The SignIn class implements ICommand to handle user sign-in functionality.
+ * It interacts with the UserDao to sign in a user based on provided login credentials.
+ */
 public class SignIn implements ICommand {
+
+    /**
+     * Executes the action to sign in a user based on the provided HttpServletRequest.
+     *
+     * @param request The HttpServletRequest containing information for user sign-in.
+     * @return A String representing the JSP name to navigate after signing in the user.
+     * @throws CommandException           If an error occurs while executing the sign-in action.
+     * @throws ParserConfigurationException If there's an issue with the parser configuration.
+     * @throws IOException                If an I/O exception occurs during execution.
+     * @throws DAOException               If there's an issue with the Data Access Object.
+     */
     @Override
-    public String execute(HttpServletRequest request)throws CommandException, ParserConfigurationException, IOException, DAOException {
+    public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
         UserDao userDao = null;
-        List<Object> list = new ArrayList<>();
         try {
             userDao = DAOFactory.getFactory().getUserDao();
-            User user = userDao.signIn(request.getParameter("Login"),request.getParameter("Password"));
-            request.setAttribute("SomeMessage","Successful LogIn");
-            request.getSession().setAttribute(SessionAtributes.Authorized,true);
+            User user = userDao.signIn(request.getParameter("Login"), request.getParameter("Password"));
+
+            // Setting session attributes after successful sign-in
+            request.setAttribute("SomeMessage", "Successful LogIn");
+            request.getSession().setAttribute(SessionAtributes.Authorized, true);
             request.getSession().setAttribute(SessionAtributes.UserId, user.getId());
             request.getSession().setAttribute(SessionAtributes.isAdmin, user.getRole());
 
-        }catch (DAOException ex){
-            throw new CommandException("LogIn troubles, oops",ex);
+        } catch (DAOException ex) {
+            throw new CommandException("Error occurred during user sign-in.", ex);
         }
         return JSPNameList.MAIN_PAGE;
     }
 }
+

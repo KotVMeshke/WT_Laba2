@@ -13,7 +13,17 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
+/**
+ * Represents the logic for the main page of the application.
+ */
 public class MainPage implements JSPPAge {
+
+    /**
+     * Executes the logic related to displaying the main page.
+     * @param request The HttpServletRequest object.
+     * @return A String representing the page or resource to redirect or display.
+     * @throws CommandException If an error occurs while executing the command.
+     */
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         List<Product> list = null;
@@ -23,31 +33,21 @@ public class MainPage implements JSPPAge {
         try {
             category = request.getParameter("category");
             productDao = DAOFactory.getFactory().getProductDao();
-            if (category == null || category == ""){
+            if (category == null || category.isEmpty()){
                 list = productDao.GetAllProduct();
-            }else {
+            } else {
                 list = productDao.GetProductListByCat(category);
             }
-                       List<CartItem> cart = (List<CartItem>) request.getSession().getAttribute("cart");
-//            if (cart != null){
-//                for (CartItem object : cart) {
-//                    if (list.contains(object.getProduct().getId())){
-//                        for (Product prod : list) {
-//                            if (object.getProduct().getId() == prod.getId()){
-//                                prod.inCart = true;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
 
+            // The commented code appears to manage cart functionality
+            // Uncomment and modify as needed for cart-related logic
 
             result = JSPNameList.MAIN_PAGE;
             request.setAttribute("products", list);
             request.getSession().setAttribute("products", list);
 
-        }catch (DAOException ex){
-            throw new CommandException("Page Error",ex);
+        } catch (DAOException ex){
+            throw new CommandException("Page Error", ex);
         }
         return result;
     }

@@ -17,7 +17,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The GetProducts class implements ICommand to handle retrieving product information.
+ * It retrieves products from the database based on a specified category or fetches all products if no category is specified.
+ */
 public class GetProducts implements ICommand {
+
+    /**
+     * Executes the action to retrieve products based on the provided HttpServletRequest.
+     *
+     * @param request The HttpServletRequest containing information about the requested product category.
+     * @return A String representing the JSP name to navigate after retrieving the products.
+     * @throws CommandException           If an error occurs while executing the get products action.
+     * @throws ParserConfigurationException If there's an issue with the parser configuration.
+     * @throws IOException                If an I/O exception occurs during execution.
+     * @throws DAOException               If there's an issue with the Data Access Object.
+     */
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
         List<Product> list = null;
@@ -26,27 +41,18 @@ public class GetProducts implements ICommand {
         try {
             category = request.getParameter("category");
             productDao = DAOFactory.getFactory().getProductDao();
-           if (category == null || category == ""){
-               list = productDao.GetAllProduct();
-           }else {
-               list = productDao.GetProductListByCat(category);
-           }
-//           List<CartItem> cart = (List<CartItem>) request.getSession().getAttribute("cart");
-//            for (CartItem object : cart) {
-//                if (list.contains(object.getProduct().getId())){
-//                    for (Product prod : list) {
-//                        if (object.getProduct().getId() == prod.getId()){
-//                            prod.inCart = true;
-//                        }
-//                    }
-//                }
-//            }
+            if (category == null || category.isEmpty()){
+                list = productDao.GetAllProduct();
+            } else {
+                list = productDao.GetProductListByCat(category);
+            }
 
             request.setAttribute("products", list);
 
-        }catch (DAOException ex){
-            throw new CommandException("Can't get XmlDao",ex);
+        } catch (DAOException ex) {
+            throw new CommandException("Error occurred while fetching products from the database.", ex);
         }
         return "index.jsp";
     }
 }
+

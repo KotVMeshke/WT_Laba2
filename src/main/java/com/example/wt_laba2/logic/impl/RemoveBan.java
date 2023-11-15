@@ -11,7 +11,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
+/**
+ * The RemoveBan class implements ICommand to handle removing bans from users.
+ * It interacts with the UserDao to remove the ban for a specific user based on the provided user ID.
+ */
 public class RemoveBan implements ICommand {
+
+    /**
+     * Executes the action to remove a ban from a user based on the provided HttpServletRequest.
+     *
+     * @param request The HttpServletRequest containing information about the user and ban removal.
+     * @return A String representing the JSP name to navigate after removing the ban.
+     * @throws CommandException           If an error occurs while executing the ban removal action.
+     * @throws ParserConfigurationException If there's an issue with the parser configuration.
+     * @throws IOException                If an I/O exception occurs during execution.
+     * @throws DAOException               If there's an issue with the Data Access Object.
+     */
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
         UserDao userDao = null;
@@ -19,15 +34,16 @@ public class RemoveBan implements ICommand {
             userDao = DAOFactory.getFactory().getUserDao();
             int userId = Integer.parseInt(request.getParameter("userId"));
             if (userId <= 0) {
-                throw new CommandException("Incorrect user id");
+                throw new CommandException("Incorrect user ID");
             }
 
             userDao.removeBan(userId);
         } catch (DAOException ex) {
-            throw new CommandException("Can't get XmlDao", ex);
+            throw new CommandException("Error occurred while removing the ban.", ex);
         }
 
         return JSPNameList.ADMINISTRATOR_PAGE;
     }
 }
+
 

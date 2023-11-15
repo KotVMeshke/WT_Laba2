@@ -11,19 +11,31 @@ import java.sql.*;
 import java.util.Dictionary;
 import java.util.List;
 
+/**
+ * Implementation of OrderDao that handles orders using an SQL database.
+ */
 public class SQLOrderDAO implements OrderDao {
 
+    /** SQL statement to create an order in the database. */
     public static final String CreateOrder = "INSERT INTO orders " +
             "(ord_id,ord_status,ord_price,ord_address, ord_time_stamp) " +
             "VALUES " +
             "(null, DEFAULT,?,?, Default) ";
 
+    /** SQL statement to retrieve the ID of the recently added order. */
     public static final String GetAddedOrderID = "SELECT max(ord_id) from orders";
+
+    /** SQL statement to add products to an order in the database. */
     public static final String AddOrderProduct = "INSERT INTO order_product " +
             "(op_product, op_order, op_amount) " +
             "VALUES " +
             "(?,?,?)";
 
+    /**
+     * Calculates the total price of an order based on the provided cart.
+     * @param cart The list of items in the cart.
+     * @return The calculated total order price.
+     */
     public static float CalculateOrderPrice(List<CartItem> cart){
         float result = 0;
         for (CartItem cartItem : cart) {
@@ -31,6 +43,12 @@ public class SQLOrderDAO implements OrderDao {
         }
         return result;
     }
+    /**
+     * Creates an order with the provided address and cart items.
+     * @param address The address for the order.
+     * @param cart The list of items in the cart.
+     * @throws DAOException if there's an error during order creation.
+     */
     @Override
     public void CreateOrder(String address, List<CartItem> cart) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();

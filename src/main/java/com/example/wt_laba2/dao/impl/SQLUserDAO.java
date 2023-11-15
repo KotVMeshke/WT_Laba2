@@ -9,6 +9,9 @@ import com.example.wt_laba2.pool.ConnectionPool;
 
 import java.sql.*;
 
+/**
+ * Implementation of UserDao handling user-related database operations.
+ */
 public class SQLUserDAO implements UserDao {
 
     private static String registerNewUser = "INSERT INTO user (idUser, UserLogin, UserPasswordHash,role,ban) Values (null, ?,?,?,?)";
@@ -26,7 +29,13 @@ public class SQLUserDAO implements UserDao {
     public int hashCode() {
         return super.hashCode();
     }
-
+    /**
+     * Authenticates a user by login and password.
+     * @param login The user's login.
+     * @param password The user's password.
+     * @return The authenticated user.
+     * @throws DAOException if there's an error during authentication.
+     */
     @Override
     public User signIn(String login, String password) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
@@ -78,6 +87,12 @@ public class SQLUserDAO implements UserDao {
         return user;
     }
 
+    /**
+     * Registers a new user.
+     * @param user The user object containing registration details.
+     * @return The ID of the registered user.
+     * @throws DAOException if there's an error during user registration.
+     */
     @Override
     public int registration(User user) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
@@ -117,6 +132,11 @@ public class SQLUserDAO implements UserDao {
         return result;
     }
 
+    /**
+     * Sets a ban for a user by their ID.
+     * @param userId The ID of the user to be banned.
+     * @throws DAOException if there's an error setting the ban.
+     */
     @Override
     public void SetBan(int userId) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
@@ -142,7 +162,11 @@ public class SQLUserDAO implements UserDao {
             }
         }
     }
-
+    /**
+     * Removes a ban for a user by their ID.
+     * @param userId The ID of the user to remove the ban.
+     * @throws DAOException if there's an error removing the ban.
+     */
     @Override
     public void removeBan(int userId) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();

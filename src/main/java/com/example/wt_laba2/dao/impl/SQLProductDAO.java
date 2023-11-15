@@ -13,31 +13,45 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of ProductDao handling product-related database operations.
+ */
 public class SQLProductDAO implements ProductDao {
 
-    private static final String GetProductsByCat = "Select pro_id, pro_name, pro_price,pro_discount ,cat_name, pro_image from product " +
-            "join product_category on cat_id = pro_cat where cat_name = ?";
+    /** SQL statement to get products by category name from the database. */
+    private static final String GetProductsByCat = "SELECT pro_id, pro_name, pro_price, pro_discount, cat_name, pro_image FROM product " +
+            "JOIN product_category ON cat_id = pro_cat WHERE cat_name = ?";
 
+    /** SQL statement to update the discount of a product in the database. */
+    private static final String AddDiscount = "UPDATE product " +
+            "SET pro_discount = ? " +
+            "WHERE pro_id = ?";
 
-    private static final String AddDiscount = "Update product " +
-            "set pro_discount = ? " +
-            "where pro_id = ?";
-    private static final String GetAllProducts = "Select pro_id, pro_name, pro_price,pro_discount, cat_name,pro_image from product " +
-            "join product_category on cat_id = pro_cat ";
+    /** SQL statement to get all products from the database. */
+    private static final String GetAllProducts = "SELECT pro_id, pro_name, pro_price, pro_discount, cat_name, pro_image FROM product " +
+            "JOIN product_category ON cat_id = pro_cat";
 
-    private static final String GetProductById = "Select pro_id, pro_name, pro_price,pro_discount, cat_name,pro_image " +
-            "from product " +
-            "join product_category " +
-            "on cat_id = pro_cat " +
-            "where pro_id = ?";
+    /** SQL statement to get a product by its ID from the database. */
+    private static final String GetProductById = "SELECT pro_id, pro_name, pro_price, pro_discount, cat_name, pro_image " +
+            "FROM product " +
+            "JOIN product_category ON cat_id = pro_cat " +
+            "WHERE pro_id = ?";
 
-    private static final String AddProduct = "Insert into product " +
-            "(pro_id, pro_name, pro_price, pro_discount, pro_cat,pro_image)" +
-            "Values " +
+    /** SQL statement to add a new product to the database. */
+    private static final String AddProduct = "INSERT INTO product " +
+            "(pro_id, pro_name, pro_price, pro_discount, pro_cat, pro_image)" +
+            "VALUES " +
             "(null, ?, ?, DEFAULT, ?, ?)";
 
-    private static final String GetCategoryByName = "Select cat_id from product_category where cat_name = ?";
+    /** SQL statement to get a category ID by its name from the database. */
+    private static final String GetCategoryByName = "SELECT cat_id FROM product_category WHERE cat_name = ?";
 
+    /**
+     * Retrieves a list of products by category name from the database.
+     * @param category The category name.
+     * @return The list of products in the specified category.
+     * @throws DAOException if there's an error retrieving the products.
+     */
     @Override
     public List<Product> GetProductListByCat(String category) throws DAOException {
         List<Product> list = new ArrayList<>();
@@ -76,6 +90,11 @@ public class SQLProductDAO implements ProductDao {
         return list;
     }
 
+    /**
+     * Retrieves all products from the database.
+     * @return The list of all products.
+     * @throws DAOException if there's an error retrieving the products.
+     */
     @Override
     public List<Product> GetAllProduct() throws DAOException {
         List<Product> list = new ArrayList<>();
@@ -112,7 +131,12 @@ public class SQLProductDAO implements ProductDao {
         }
         return list;
     }
-
+    /**
+     * Sets the discount for a product in the database.
+     * @param productId The ID of the product.
+     * @param discountSize The discount to set for the product.
+     * @throws DAOException if there's an error setting the discount.
+     */
     @Override
     public void SetDiscount(int productId, int discountSize) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
@@ -140,7 +164,14 @@ public class SQLProductDAO implements ProductDao {
             }
         }
     }
-
+    /**
+     * Adds a new product to the database.
+     * @param name The name of the product.
+     * @param price The price of the product.
+     * @param category The category of the product.
+     * @param file The image file of the product.
+     * @throws DAOException if there's an error adding the product.
+     */
     @Override
     public void AddProduct(String name,String price, String category, InputStream file) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
@@ -180,7 +211,12 @@ public class SQLProductDAO implements ProductDao {
             }
         }
     }
-
+    /**
+     * Retrieves a product by its ID from the database.
+     * @param id The ID of the product.
+     * @return The product with the specified ID.
+     * @throws DAOException if there's an error retrieving the product.
+     */
     @Override
     public Product GetProductById(int id) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
