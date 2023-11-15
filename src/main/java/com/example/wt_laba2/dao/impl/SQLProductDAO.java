@@ -15,14 +15,13 @@ import java.util.List;
 
 public class SQLProductDAO implements ProductDao {
 
-    private static final String connectorDB = "jdbc:mysql://localhost:3306/mydb?serverTimezone=Europe/Moscow&useSSL=false";
     private static final String GetProductsByCat = "Select pro_id, pro_name, pro_price,pro_discount ,cat_name, pro_image from product " +
             "join product_category on cat_id = pro_cat where cat_name = ?";
 
 
     private static final String AddDiscount = "Update product " +
             "set pro_discount = ? " +
-            "where pro_name = ?";
+            "where pro_id = ?";
     private static final String GetAllProducts = "Select pro_id, pro_name, pro_price,pro_discount, cat_name,pro_image from product " +
             "join product_category on cat_id = pro_cat ";
 
@@ -63,9 +62,10 @@ public class SQLProductDAO implements ProductDao {
                         blob.getBytes(1,(int)blob.length())));
             }
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closeResultSet(rs);
                 ConnectionPool.closePreparedStatement(ps);
@@ -98,12 +98,11 @@ public class SQLProductDAO implements ProductDao {
                         rs.getString(5),
                         blob.getBytes(1,(int)blob.length())));
             }
-//        } catch (ClassNotFoundException e) {
-//            throw new DAOException("Class not found");
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closeResultSet(rs);
                 ConnectionPool.closeStatement(st);
@@ -121,7 +120,6 @@ public class SQLProductDAO implements ProductDao {
         Connection con = null;
         try {
             con = connectionPool.getConnection();
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(AddDiscount);
             ps.setInt(1, discountSize);
             ps.setInt(2, productId);
@@ -130,9 +128,11 @@ public class SQLProductDAO implements ProductDao {
                 throw new DAOException("Discount add exception");
             }
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
+
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
@@ -168,9 +168,10 @@ public class SQLProductDAO implements ProductDao {
                 throw new DAOException("Product add exception");
             }
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closeResultSet(rs);
                 ConnectionPool.closePreparedStatement(ps);
@@ -201,9 +202,10 @@ public class SQLProductDAO implements ProductDao {
                         rs.getBytes(6));
             }
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closeResultSet(rs);
                 ConnectionPool.closePreparedStatement(ps);

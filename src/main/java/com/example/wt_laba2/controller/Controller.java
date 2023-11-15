@@ -33,7 +33,7 @@ public class Controller extends HttpServlet {
 
         } catch (ClassNotFoundException e) {
             System.out.println("Driver exception");
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             System.out.println("Connection creation was incorrect");
 
         }
@@ -45,7 +45,9 @@ public class Controller extends HttpServlet {
         System.out.println(requestURI);
         JSPPAge pageContent = JSPHelper.getJspHelper().getPage(requestURI);
         String page;
-
+        if (req.getSession().getAttribute("language") == null) {
+            req.getSession().setAttribute("language", "en");
+        }
         // LOG
         System.out.println("URI " + requestURI + " received");
 
@@ -58,7 +60,7 @@ public class Controller extends HttpServlet {
         } catch (Exception e) {
             //LOG
             System.out.println("Exception in Controller " + e.toString());
-            page =  JSPNameList.ERROR_PAGE;
+            page = JSPNameList.ERROR_PAGE;
         }
 
         RequestDispatcher dispatcher = req.getRequestDispatcher(page);
@@ -82,17 +84,18 @@ public class Controller extends HttpServlet {
         try {
             result = command.execute(req);
         } catch (CommandException ex) {
-            result =  JSPNameList.ERROR_PAGE;
+            result = JSPNameList.ERROR_PAGE;
         } catch (Exception ex) {
-            result =  JSPNameList.ERROR_PAGE;
+            result = JSPNameList.ERROR_PAGE;
         }
 //        resp.sendRedirect(result);
-        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
-        if (dispatcher != null) {
-            dispatcher.forward(req, resp);
-        } else {
-            errorMessageDireclyFromresponse(resp);
-        }
+        this.doGet(req, resp);
+//        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
+//        if (dispatcher != null) {
+//            dispatcher.forward(req, resp);
+//        } else {
+//            errorMessageDireclyFromresponse(resp);
+//        }
     }
 
     private void errorMessageDireclyFromresponse(HttpServletResponse response) throws IOException {

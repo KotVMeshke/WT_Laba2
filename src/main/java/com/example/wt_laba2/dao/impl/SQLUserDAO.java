@@ -22,7 +22,6 @@ public class SQLUserDAO implements UserDao {
             "where idUser = ?";
 
     private static String checkBan = "Select ban from user where idUser = ?";
-    private static String connectorDB ="jdbc:mysql://localhost:3306/mydb?serverTimezone=Europe/Moscow&useSSL=false";
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -64,9 +63,10 @@ public class SQLUserDAO implements UserDao {
                 }
             }
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closeResultSet(rs);
                 ConnectionPool.closePreparedStatement(ps);
@@ -103,9 +103,10 @@ public class SQLUserDAO implements UserDao {
                 result = rs.getInt(1);
             }
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closeResultSet(rs);
                 ConnectionPool.closePreparedStatement(ps);
@@ -123,7 +124,6 @@ public class SQLUserDAO implements UserDao {
         Connection con = null;
         try {
             con = connectionPool.getConnection();
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(setBan);
             ps.setInt(1,userId);
             int columNumber = ps.executeUpdate();
@@ -131,9 +131,10 @@ public class SQLUserDAO implements UserDao {
                 throw new DAOException("User with this id: " + String.valueOf(userId) + " doesn't exist");
             }
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {
@@ -149,7 +150,6 @@ public class SQLUserDAO implements UserDao {
         Connection con = null;
         try {
             con = connectionPool.getConnection();
-            con = DriverManager.getConnection(connectorDB, "root", "123456");
             ps = con.prepareStatement(removeBan);
             ps.setInt(1,userId);
             int columNumber = ps.executeUpdate();
@@ -157,9 +157,10 @@ public class SQLUserDAO implements UserDao {
                 throw new DAOException("User with this id: " + String.valueOf(userId) + " doesn't exist");
             }
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
-            try {
+            try{
                 connectionPool.releaseConnection(con);
                 ConnectionPool.closePreparedStatement(ps);
             } catch (SQLException e) {

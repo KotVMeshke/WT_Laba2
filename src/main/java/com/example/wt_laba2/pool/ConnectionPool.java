@@ -74,5 +74,21 @@ public class ConnectionPool {
             throw new SQLException(e);
         }
     }
+
+    public static void commitQuery(Connection con) throws SQLException{
+        try{
+            con.commit();
+        }catch (SQLException ex){
+            throw  new SQLException(ex);
+        }
+    }
+
+    public static void rollbackQuery(Connection con){
+        try {
+            con.rollback();
+        }catch (SQLException ex){
+            System.out.println("Rollback error");
+        }
+    }
 }
 

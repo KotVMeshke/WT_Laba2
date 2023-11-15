@@ -7,125 +7,94 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
-<!DOCTYPE html>
-<html lang="en">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : 'en'}" scope="session" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="text" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html  lang="${language}">
 <style>
-    body{
-        margin: 0;
-        padding: 0;
+    body {
+
+        font-family: Arial, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
-        font-family: 'Jost', sans-serif;
-        background: #0F2027;  /* fallback for old browsers */
-        background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    }
-    .main{
-        width: 25vw;
-        height: 500px;
-        background: red;
-        overflow: hidden;
-        background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
-        border-radius: 10px;
-        box-shadow: 5px 20px 50px #000;
-        min-width: 350px;
-    }
-    #chk{
-        display: none;
-    }
-    .signup{
-        position: relative;
-        width:100%;
-        height: 100%;
-    }
-    label{
-        color: #fff;
-        font-size: 2.3em;
-        justify-content: center;
-        display: flex;
-        margin: 60px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: .5s ease-in-out;
-    }
-    input{
-        width: 60%;
-        height: 20px;
-        background: #e0dede;
-        justify-content: center;
-        display: flex;
-        margin: 20px auto;
-        padding: 10px;
-        border: none;
-        outline: none;
-        border-radius: 5px;
-    }
-    .Press{
-        width: 60%;
-        height: 40px;
-        margin: 10px auto;
-        justify-content: center;
-        display: block;
-        color: #fff;
-        background: #573b8a;
-        font-size: 1em;
-        font-weight: bold;
-        margin-top: 20px;
-        outline: none;
-        border: none;
-        border-radius: 5px;
-        transition: .2s ease-in;
-        cursor: pointer;
-    }
-    .Press:hover{
-        background: #6d44b8;
-    }
-    .login{
-        height: 600px;
-        background: #eee;
-        transform: translateY(-180px);
-        transition: .3s ease-in-out;
-    }
-    .login label{
-        color: #573b8a;
-        transform: scale(.6);
+        height: 100vh;
+        margin: 0;
     }
 
-    #chk:checked ~ .login{
-        transform: translateY(-625px);
+    .form-container {
+        display: flex;
+        flex-direction: column;
     }
-    #chk:checked ~ .login label{
-        transform: scale(1);
+
+    .registration-form, .login-form {
+        margin-bottom: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
-    #chk:checked ~ .signup label{
-        transform: scale(.6);
+
+    label {
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 94%;
+        padding: 8px;
+        margin-bottom: 10px;
+
+        padding-right: -20px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    input[type="submit"] {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #45a049;
     }
 </style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<%--    <link rel="stylesheet" href="../${pageContext.request.contextPath}/Styles/EnterFormStyles.css">--%>
     <title>Sing up</title>
 </head>
 
 <body>
+<form>
+    <select id="language" name="language" onchange="submit()">
+        <option value="en" ${language == 'en' ? 'selected' : ''}><fmt:message key="language.text.english" /></option>
+        <option value="ru" ${language == 'ru' ? 'selected' : ''}><fmt:message key="language.text.russian" /></option>
+    </select>
+</form>
 <div class="form-container">
     <div class="registration-form">
-        <h2>SING UP</h2>
+        <h2><fmt:message key="signup.header" /></h2>
         <form action="TechStore" method="post">
-            <label for="reg-login">Login:</label>
+            <label for="reg-login"><fmt:message key="signup.label.login" />:</label>
             <input type="text" id="reg-login" name="Login" required><br>
 
-            <label for="reg-password">Password:</label>
+            <label for="reg-password"><fmt:message key="signup.label.password" />:</label>
             <input type="password" id="reg-password" name="Password" required><br>
 
-            <label for="confirm-password">Repeat password:</label>
+            <label for="confirm-password"><fmt:message key="signup.label.reppassword" />:</label>
             <input type="password" id="confirm-password" name="confirm-password" required><br>
 
             <input type="hidden" name="command" value="REGISTER" />
-            <input type="submit" id ="Register-button" value="Sing up">
+            <input type="submit" id ="Register-button" value="<fmt:message key="signup.button.signup" />">
 
         </form>
     </div>

@@ -14,18 +14,26 @@ import jakarta.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 
 public class ProcessOrder implements ICommand {
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
         OrderDao orderDao = null;
+        Dictionary<Integer,Integer> amount = null;
         try {
 
             String address = request.getParameter("address");
             orderDao = DAOFactory.getFactory().getOrderDao();
             List<CartItem> cart = (ArrayList<CartItem>)request.getSession().getAttribute("cart");
-            orderDao.CreateOrder(address, cart);
+
+            for (CartItem object : cart) {
+                amount.put(
+                        object.getProduct().getId(),
+                        Integer.parseInt(request.getParameter("amount_" + object.getProduct().getId())));
+            }
+            orderDao.CreateOrder(address, cart, amount);
             request.getSession().removeAttribute("cart");
         }catch (DAOException ex){
             throw new CommandException("Can't get XmlDao",ex);

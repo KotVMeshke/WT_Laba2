@@ -1,18 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8" %>
-<%@ page import="java.util.Base64" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
-<!DOCTYPE html>
-<html lang="en">
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : 'en'}" scope="session" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="text" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html  lang="${language}">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<%--    <link rel="stylesheet" href="Styles/MainPageStyles.css">--%>
     <title>TechShop</title>
 </head>
 <style>
@@ -64,20 +64,6 @@
         font-style: italic;
         font-size: 24px;
     }
-
-    /*.signin {*/
-    /*    background-color: #2f2e2e;*/
-    /*    width:130%;*/
-    /*    height: 140%;*/
-    /*    color: white;*/
-    /*}*/
-
-    /*.signup {*/
-    /*    width:130%;*/
-    /*    height: 140%;*/
-    /*    background-color: #2f2e2e;*/
-    /*    color: white;*/
-    /*}*/
 
     .signin, .signup {
         width:90%;
@@ -191,7 +177,14 @@
         color: white;
         text-decoration: none;
     }
-
+    #language {
+        margin-top: 10px;
+        margin-right: 10px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+    }
 
 </style>
 
@@ -208,12 +201,12 @@
                     <form action="SignIn" method="get">
                         <input type="hidden" name="command" value="TO_PAGE"/>
                         <input type="hidden" name="page_name" value="JSP/Login.jsp"/>
-                        <input type="submit" class="signin" id="to_sing_in" value="Sing in">
+                        <input type="submit" class="signin" id="to_sing_in" value="<fmt:message key="main.login.button" />">
                     </form>
                     <form action="SignUp" method="get">
                         <input type="hidden" name="command" value="TO_PAGE"/>
                         <input type="hidden" name="page_name" value="JSP/SingUp.jsp"/>
-                        <input type="submit" class="signup" id="to_sing_up" value="Sing up">
+                        <input type="submit" class="signup" id="to_sing_up" value="<fmt:message key="main.signup.button" />">
                     </form>
                 </div>
             </c:when>
@@ -221,11 +214,11 @@
                 <div class="buttons">
                     <form action="TechStore" method="post">
                         <input type="hidden" name="command" value="EXIT"/>
-                        <input type="submit" class="signin" value="Log out">
+                        <input type="submit" class="signin" value="<fmt:message key="main.logout.button" />">
                     </form>
                     <c:if test="${sessionScope.isAdmin == 'Administrator'}">
                         <form action="Administrator" method="get">
-                            <input type="submit" class="signup" value="Admin">
+                            <input type="submit" class="signup" value="<fmt:message key="main.admin.button" />">
                         </form>
                     </c:if>
 
@@ -242,41 +235,47 @@
 <form action="TechStore" method="post">
     <input type="hidden" name="command" value="DISPLAY_PRODUCTS"/>
 
-    <label for="category">Category:</label>
+    <label for="category"><fmt:message key="main.showprod.label.category" />:</label>
     <input type="text" id="category" name="category"/>
 
-    <button type="submit">Show List</button>
+    <button type="submit"><fmt:message key="main.showprod.button" /></button>
 </form>
 
 <c:if test="${not empty sessionScope.UserId}">
 <form action="ShoppingCart" method="get">
-    <button type="submit" class="view-cart-button">View Cart</button>
+    <button type="submit" class="view-cart-button"><fmt:message key="main.showcart.button" /></button>
 </form>
 </c:if>
+<form>
+    <select id="language" name="language" onchange="submit()">
+    <option value="en" ${language == 'en' ? 'selected' : ''}><fmt:message key="language.text.english" /></option>
+    <option value="ru" ${language == 'ru' ? 'selected' : ''}><fmt:message key="language.text.russian" /></option>
+    </select>
+</form>
 <div class="container">
-    <h1>Product List</h1>
+    <h1><fmt:message key="main.product.header" /></h1>
     <c:forEach var="product" items="${products}">
         <div class="product-box">
             <h2>${product.productName}</h2>
             <img src="data:image/jpg;base64,${product.image}" alt="" width="240" height="300"/>
             <c:choose>
                 <c:when test="${product.discount == 0 or empty product.discount}">
-                    <p>Price: ${product.price}</p>
+                    <p><fmt:message key="main.product.price" />: ${product.price}</p>
                 </c:when>
                 <c:otherwise>
                     <fmt:formatNumber var="roundedValue" value="${product.price*(100-product.discount)/100}" pattern="#,##0.00" />
-                    <p>Price: <del>${product.price}</del> <span style="color: red;">${roundedValue}</span></p>
+                    <p><fmt:message key="main.product.price" />: <del>${product.price}</del> <span style="color: red;">${roundedValue}</span></p>
                 </c:otherwise>
             </c:choose>
 
 
-            <p>Category: ${product.category}</p>
+            <p><fmt:message key="main.product.category" />: ${product.category}</p>
 
             <c:if test="${not empty sessionScope.UserId}">
             <form action="TechStore" method="post">
                 <input type="hidden" name="command" value="ADD_TO_CART">
                 <input type="hidden" name="productId" value="${product.id}">
-                <button type="submit">Add to cart</button>
+                <button type="submit"><fmt:message key="main.product.add.button" /></button>
             </form>
             </c:if>
         </div>

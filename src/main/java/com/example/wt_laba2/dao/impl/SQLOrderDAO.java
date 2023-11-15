@@ -8,10 +8,10 @@ import com.example.wt_laba2.factory.ConnectionPoolFactory;
 import com.example.wt_laba2.pool.ConnectionPool;
 
 import java.sql.*;
+import java.util.Dictionary;
 import java.util.List;
 
 public class SQLOrderDAO implements OrderDao {
-    private static final String connectorDB = "jdbc:mysql://localhost:3306/mydb?serverTimezone=Europe/Moscow&useSSL=false";
 
     public static final String CreateOrder = "INSERT INTO orders " +
             "(ord_id,ord_status,ord_price,ord_address, ord_time_stamp) " +
@@ -24,15 +24,15 @@ public class SQLOrderDAO implements OrderDao {
             "VALUES " +
             "(?,?,?)";
 
-    public static float CalculateOrderPrice(List<CartItem> cart){
+    public static float CalculateOrderPrice(List<CartItem> cart, Dictionary<Integer,Integer> amount){
         float result = 0;
         for (CartItem cartItem : cart) {
-            result += cartItem.getAmount() * Float.parseFloat(cartItem.getProduct().getPrice())*(100-cartItem.getProduct().getDiscount())/100;
+            result += amount.get(cartItem.getProduct().getId())* Float.parseFloat(cartItem.getProduct().getPrice())*(100-cartItem.getProduct().getDiscount())/100;
         }
         return result;
     }
     @Override
-    public void CreateOrder(String address, List<CartItem> cart) throws DAOException {
+    public void CreateOrder(String address, List<CartItem> cart, Dictionary<Integer,Integer> amount) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
         Connection con = null;
@@ -42,7 +42,7 @@ public class SQLOrderDAO implements OrderDao {
             con = connectionPool.getConnection();
 
             ps = con.prepareStatement(CreateOrder);
-            ps.setFloat(1, CalculateOrderPrice(cart));
+            ps.setFloat(1, CalculateOrderPrice(cart,amount));
             ps.setString(2, address);
             int lines = ps.executeUpdate();
             if (lines != 1) {
@@ -61,6 +61,7 @@ public class SQLOrderDAO implements OrderDao {
             }
 
         } catch (SQLException e) {
+            ConnectionPool.rollbackQuery(con);
             throw new DAOException("Sql error");
         } finally {
             try{
