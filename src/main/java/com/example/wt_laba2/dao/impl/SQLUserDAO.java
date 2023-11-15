@@ -64,7 +64,7 @@ public class SQLUserDAO implements UserDao {
             }
         } catch (SQLException e) {
             ConnectionPool.rollbackQuery(con);
-            throw new DAOException("Sql error");
+            throw new DAOException("Sql error",e);
         } finally {
             try{
                 connectionPool.releaseConnection(con);
@@ -104,7 +104,7 @@ public class SQLUserDAO implements UserDao {
             }
         } catch (SQLException e) {
             ConnectionPool.rollbackQuery(con);
-            throw new DAOException("Sql error");
+            throw new DAOException("Sql error",e);
         } finally {
             try{
                 connectionPool.releaseConnection(con);
@@ -132,7 +132,7 @@ public class SQLUserDAO implements UserDao {
             }
         } catch (SQLException e) {
             ConnectionPool.rollbackQuery(con);
-            throw new DAOException("Sql error");
+            throw new DAOException("Sql error",e);
         } finally {
             try{
                 connectionPool.releaseConnection(con);
@@ -158,7 +158,7 @@ public class SQLUserDAO implements UserDao {
             }
         } catch (SQLException e) {
             ConnectionPool.rollbackQuery(con);
-            throw new DAOException("Sql error");
+            throw new DAOException("Sql error",e);
         } finally {
             try{
                 connectionPool.releaseConnection(con);

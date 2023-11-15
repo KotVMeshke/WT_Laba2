@@ -1,5 +1,6 @@
 package com.example.wt_laba2.Jsp.impl;
 
+import com.example.wt_laba2.bean.CartItem;
 import com.example.wt_laba2.bean.JSPNameList;
 import com.example.wt_laba2.bean.Product;
 import com.example.wt_laba2.dao.ProductDao;
@@ -27,6 +28,20 @@ public class MainPage implements JSPPAge {
             }else {
                 list = productDao.GetProductListByCat(category);
             }
+                       List<CartItem> cart = (List<CartItem>) request.getSession().getAttribute("cart");
+//            if (cart != null){
+//                for (CartItem object : cart) {
+//                    if (list.contains(object.getProduct().getId())){
+//                        for (Product prod : list) {
+//                            if (object.getProduct().getId() == prod.getId()){
+//                                prod.inCart = true;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+
+
             result = JSPNameList.MAIN_PAGE;
             request.setAttribute("products", list);
             request.getSession().setAttribute("products", list);

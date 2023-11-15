@@ -23,6 +23,7 @@ public class CommandHelper {
         commands.put(CommandName.SET_BAN, new SetBan());
         commands.put(CommandName.REMOVE_BAN, new RemoveBan());
         commands.put(CommandName.ADD_PRODUCT, new AddProduct());
+        commands.put(CommandName.UPDATE_CART, new UpdateCart());
     }
 
     public static CommandHelper getCommandHelper(){

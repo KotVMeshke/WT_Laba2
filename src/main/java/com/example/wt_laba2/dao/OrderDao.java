@@ -7,5 +7,5 @@ import java.util.Dictionary;
 import java.util.List;
 
 public interface OrderDao {
-    void CreateOrder(String address, List<CartItem> cart, Dictionary<Integer,Integer> amount) throws DAOException;
+    void CreateOrder(String address, List<CartItem> cart) throws DAOException;
 }

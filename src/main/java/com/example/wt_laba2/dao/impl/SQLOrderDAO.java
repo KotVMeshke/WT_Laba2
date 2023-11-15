@@ -24,15 +24,15 @@ public class SQLOrderDAO implements OrderDao {
             "VALUES " +
             "(?,?,?)";
 
-    public static float CalculateOrderPrice(List<CartItem> cart, Dictionary<Integer,Integer> amount){
+    public static float CalculateOrderPrice(List<CartItem> cart){
         float result = 0;
         for (CartItem cartItem : cart) {
-            result += amount.get(cartItem.getProduct().getId())* Float.parseFloat(cartItem.getProduct().getPrice())*(100-cartItem.getProduct().getDiscount())/100;
+            result += cartItem.getAmount()* Float.parseFloat(cartItem.getProduct().getPrice())*(100-cartItem.getProduct().getDiscount())/100;
         }
         return result;
     }
     @Override
-    public void CreateOrder(String address, List<CartItem> cart, Dictionary<Integer,Integer> amount) throws DAOException {
+    public void CreateOrder(String address, List<CartItem> cart) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
         Connection con = null;
@@ -42,7 +42,7 @@ public class SQLOrderDAO implements OrderDao {
             con = connectionPool.getConnection();
 
             ps = con.prepareStatement(CreateOrder);
-            ps.setFloat(1, CalculateOrderPrice(cart,amount));
+            ps.setFloat(1, CalculateOrderPrice(cart));
             ps.setString(2, address);
             int lines = ps.executeUpdate();
             if (lines != 1) {
@@ -62,7 +62,7 @@ public class SQLOrderDAO implements OrderDao {
 
         } catch (SQLException e) {
             ConnectionPool.rollbackQuery(con);
-            throw new DAOException("Sql error");
+            throw new DAOException("Sql error",e);
         } finally {
             try{
                 connectionPool.releaseConnection(con);

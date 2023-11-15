@@ -11,6 +11,8 @@ public class Product {
     public String image;
     public int discount;
 
+    public boolean inCart;
+
     public Product(int id, String productName, String price,int discount, String category ,byte[] image) {
         this.id = id;
         this.productName = productName;
@@ -18,6 +20,7 @@ public class Product {
         this.discount = discount;
         this.category = category;
         this.image = Base64.getEncoder().encodeToString(image);
+        this.inCart = false;
     }
     public Product(int id, String productName, String price,int discount, String category ,String image) {
         this.id = id;

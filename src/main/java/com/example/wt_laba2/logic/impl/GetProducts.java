@@ -1,5 +1,6 @@
 package com.example.wt_laba2.logic.impl;
 
+import com.example.wt_laba2.bean.CartItem;
 import com.example.wt_laba2.bean.Product;
 import com.example.wt_laba2.bean.SessionAtributes;
 import com.example.wt_laba2.bean.User;
@@ -30,6 +31,17 @@ public class GetProducts implements ICommand {
            }else {
                list = productDao.GetProductListByCat(category);
            }
+//           List<CartItem> cart = (List<CartItem>) request.getSession().getAttribute("cart");
+//            for (CartItem object : cart) {
+//                if (list.contains(object.getProduct().getId())){
+//                    for (Product prod : list) {
+//                        if (object.getProduct().getId() == prod.getId()){
+//                            prod.inCart = true;
+//                        }
+//                    }
+//                }
+//            }
+
             request.setAttribute("products", list);
 
         }catch (DAOException ex){

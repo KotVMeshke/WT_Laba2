@@ -13,4 +13,6 @@ public enum CommandName {
     SET_BAN,
     REMOVE_BAN,
     ADD_PRODUCT,
+
+    UPDATE_CART
 }

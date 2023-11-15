@@ -147,23 +147,22 @@
                 <fmt:formatNumber var="roundedValue" value="${CartItem.product.price*(100-CartItem.product.discount)/100}" pattern="#,##0.00" />
 
                 <p><fmt:message key="shoppingcart.product.price" />e: <del>${CartItem.product.price}</del> <span style="color: red;">${roundedValue}</span></p>
-                <label for="quantity"><fmt:message key="shoppingcart.label.amount" />:</label>
-                <input type="number" id="quantity" name="quantity_${CartItem.product.id}" value="${CartItem.amount}" min="1" required>
-            </c:otherwise>
+                 </c:otherwise>
         </c:choose>
 
         <p><fmt:message key="shoppingcart.label.category" />: ${CartItem.product.category}</p>
         <p><fmt:message key="shoppingcart.label.amount" />: ${CartItem.amount}</p>
 
-<%--        <form action="TechStore" method="post">--%>
-<%--            <input type="hidden" name="command" value="UPDATE_CART">--%>
-<%--            <input type="hidden" name="productId" value="${CartItem.product.id}">--%>
 
-<%--            <label for="quantity">Quantity:</label>--%>
-<%--            <input type="number" id="quantity" name="quantity" value="${CartItem.amount}" min="1" required>--%>
+            <form action="TechStore" method="post">
+            <input type="hidden" name="command" value="UPDATE_CART">
+            <input type="hidden" name="productId" value="${CartItem.product.id}">
 
-<%--            <button type="submit">Update Quantity</button>--%>
-<%--        </form>--%>
+                <label for="quantity"><fmt:message key="shoppingcart.label.amount" />:</label>
+                <input type="number" id="quantity" name="quantity" value="${CartItem.amount}" min="1" required>
+
+            <button type="submit">Update Quantity</button>
+        </form>
 
         <form action="TechStore" method="post">
             <input type="hidden" name="command" value="REMOVE_FROM_CART">

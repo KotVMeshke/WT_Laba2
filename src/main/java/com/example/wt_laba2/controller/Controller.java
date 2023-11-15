@@ -11,7 +11,8 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class Controller extends HttpServlet {
         super();
     }
 
+    private static final Logger logger = LogManager.getLogger(Controller.class);
     @Override
     public void init() throws ServletException {
         try {
@@ -32,9 +34,9 @@ public class Controller extends HttpServlet {
             connectionPool.CreateConnections();
 
         } catch (ClassNotFoundException e) {
-            System.out.println("Driver exception");
+//            logger.error("ERROR: " + e.getMessage());
         } catch (SQLException ex) {
-            System.out.println("Connection creation was incorrect");
+//            logger.error("ERROR: " + ex.getMessage());
 
         }
     }
@@ -48,18 +50,16 @@ public class Controller extends HttpServlet {
         if (req.getSession().getAttribute("language") == null) {
             req.getSession().setAttribute("language", "en");
         }
-        // LOG
-        System.out.println("URI " + requestURI + " received");
 
         try {
             page = pageContent.execute(req);
         } catch (CommandException e) {
-            //LOG
-            System.out.println("Page exception in Controller " + e.toString());
+//            logger.error("ERROR: Page exception in Controller " + e.toString());
+
             page = JSPNameList.ERROR_PAGE;
         } catch (Exception e) {
             //LOG
-            System.out.println("Exception in Controller " + e.toString());
+//            logger.error("ERROR: Page exception in Controller " + e.toString());
             page = JSPNameList.ERROR_PAGE;
         }
 
@@ -85,17 +85,18 @@ public class Controller extends HttpServlet {
             result = command.execute(req);
         } catch (CommandException ex) {
             result = JSPNameList.ERROR_PAGE;
+
         } catch (Exception ex) {
             result = JSPNameList.ERROR_PAGE;
         }
 //        resp.sendRedirect(result);
-        this.doGet(req, resp);
-//        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
-//        if (dispatcher != null) {
-//            dispatcher.forward(req, resp);
-//        } else {
-//            errorMessageDireclyFromresponse(resp);
-//        }
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher(result);
+        if (dispatcher != null) {
+            dispatcher.forward(req, resp);
+        } else {
+            errorMessageDireclyFromresponse(resp);
+        }
     }
 
     private void errorMessageDireclyFromresponse(HttpServletResponse response) throws IOException {
