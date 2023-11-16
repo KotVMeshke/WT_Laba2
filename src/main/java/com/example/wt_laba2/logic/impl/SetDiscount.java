@@ -6,8 +6,11 @@ import com.example.wt_laba2.dao.OrderDao;
 import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.exception.ServiceException;
 import com.example.wt_laba2.factory.DAOFactory;
+import com.example.wt_laba2.factory.ServiceFactory;
 import com.example.wt_laba2.logic.ICommand;
+import com.example.wt_laba2.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,25 +36,17 @@ public class SetDiscount implements ICommand {
      */
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
-        ProductDao productDao = null;
+        ProductService productService = null;
         try {
-            productDao = DAOFactory.getFactory().getProductDao();
+            productService = ServiceFactory.getInstance().getProductService();
             int productId = Integer.parseInt(request.getParameter("discountProductId"));
-            if (productId == 0)
-                throw new CommandException("Incorrect product ID");
 
             String discount = request.getParameter("discountAmount");
             int discountValue = Integer.parseInt(discount);
+            productService.SetDiscount(productId, discountValue);
 
-            // Limit the discount value between 0 and 100
-            if (discountValue < 0) {
-                discountValue = 0;
-            } else if (discountValue > 100) {
-                discountValue = 100;
-            }
 
-            productDao.SetDiscount(productId, discountValue);
-        } catch (DAOException ex) {
+        } catch (ServiceException ex) {
             throw new CommandException("Error occurred while setting the discount.", ex);
         }
         return JSPNameList.ADMINISTRATOR_PAGE;

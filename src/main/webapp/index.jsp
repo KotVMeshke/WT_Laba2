@@ -3,11 +3,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : 'en'}" scope="session" />
-<fmt:setLocale value="${language}" />
-<fmt:setBundle basename="text" />
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : 'en'}"
+       scope="session"/>
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="text"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html  lang="${language}">
+<html lang="${language}">
 
 <head>
     <meta charset="UTF-8">
@@ -28,6 +29,7 @@
         text-align: center;
         width: 100%;
     }
+
     .view-cart-button, .add-to-cart-button {
         background-color: #4caf50;
         color: white;
@@ -42,7 +44,7 @@
         background-color: #45a049;
     }
 
-    .buttons{
+    .buttons {
         display: flex;
         justify-content: space-between;
         padding-right: 5%;
@@ -50,6 +52,7 @@
         /*border: red 2px solid;*/
         height: 100%;
     }
+
     .header {
         display: flex;
         justify-content: space-between;
@@ -66,7 +69,7 @@
     }
 
     .signin, .signup {
-        width:90%;
+        width: 90%;
         height: 90%;
         font-size: 18px; /* Set the font size according to your preference */
         margin: 10px; /* Set the margin according to your preference */
@@ -81,6 +84,7 @@
     .signin:hover, .signup:hover {
         background-color: #555; /* Change background color on hover */
     }
+
     body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
@@ -177,6 +181,7 @@
         color: white;
         text-decoration: none;
     }
+
     #language {
         margin-top: 10px;
         margin-right: 10px;
@@ -201,12 +206,14 @@
                     <form action="SignIn" method="get">
                         <input type="hidden" name="command" value="TO_PAGE"/>
                         <input type="hidden" name="page_name" value="JSP/Login.jsp"/>
-                        <input type="submit" class="signin" id="to_sing_in" value="<fmt:message key="main.login.button" />">
+                        <input type="submit" class="signin" id="to_sing_in"
+                               value="<fmt:message key="main.login.button" />">
                     </form>
                     <form action="SignUp" method="get">
                         <input type="hidden" name="command" value="TO_PAGE"/>
                         <input type="hidden" name="page_name" value="JSP/SingUp.jsp"/>
-                        <input type="submit" class="signup" id="to_sing_up" value="<fmt:message key="main.signup.button" />">
+                        <input type="submit" class="signup" id="to_sing_up"
+                               value="<fmt:message key="main.signup.button" />">
                     </form>
                 </div>
             </c:when>
@@ -235,48 +242,51 @@
 <form action="TechStore" method="post">
     <input type="hidden" name="command" value="DISPLAY_PRODUCTS"/>
 
-    <label for="category"><fmt:message key="main.showprod.label.category" />:</label>
+    <label for="category"><fmt:message key="main.showprod.label.category"/>:</label>
     <input type="text" id="category" name="category"/>
 
-    <button type="submit"><fmt:message key="main.showprod.button" /></button>
+    <button type="submit"><fmt:message key="main.showprod.button"/></button>
 </form>
 
 <c:if test="${not empty sessionScope.UserId}">
-<form action="ShoppingCart" method="get">
-    <button type="submit" class="view-cart-button"><fmt:message key="main.showcart.button" /></button>
-</form>
+    <form action="ShoppingCart" method="get">
+        <button type="submit" class="view-cart-button"><fmt:message key="main.showcart.button"/></button>
+    </form>
 </c:if>
 <form>
     <select id="language" name="language" onchange="submit()">
-    <option value="en" ${language == 'en' ? 'selected' : ''}><fmt:message key="language.text.english" /></option>
-    <option value="ru" ${language == 'ru' ? 'selected' : ''}><fmt:message key="language.text.russian" /></option>
+        <option value="en" ${language == 'en' ? 'selected' : ''}><fmt:message key="language.text.english"/></option>
+        <option value="ru" ${language == 'ru' ? 'selected' : ''}><fmt:message key="language.text.russian"/></option>
     </select>
 </form>
 <div class="container">
-    <h1><fmt:message key="main.product.header" /></h1>
+    <h1><fmt:message key="main.product.header"/></h1>
     <c:forEach var="product" items="${products}">
         <div class="product-box">
             <h2>${product.productName}</h2>
             <img src="data:image/jpg;base64,${product.image}" alt="" width="240" height="300"/>
             <c:choose>
                 <c:when test="${product.discount == 0 or empty product.discount}">
-                    <p><fmt:message key="main.product.price" />: ${product.price}</p>
+                    <p><fmt:message key="main.product.price"/>: ${product.price}</p>
                 </c:when>
                 <c:otherwise>
-                    <fmt:formatNumber var="roundedValue" value="${product.price*(100-product.discount)/100}" pattern="#,##0.00" />
-                    <p><fmt:message key="main.product.price" />: <del>${product.price}</del> <span style="color: red;">${roundedValue}</span></p>
+                    <fmt:formatNumber var="roundedValue" value="${product.price*(100-product.discount)/100}"
+                                      pattern="#,##0.00"/>
+                    <p><fmt:message key="main.product.price"/>:
+                        <del>${product.price}</del>
+                        <span style="color: red;">${roundedValue}</span></p>
                 </c:otherwise>
             </c:choose>
 
 
-            <p><fmt:message key="main.product.category" />: ${product.category}</p>
+            <p><fmt:message key="main.product.category"/>: ${product.category}</p>
 
             <c:if test="${not empty sessionScope.UserId}">
-            <form action="TechStore" method="post">
-                <input type="hidden" name="command" value="ADD_TO_CART">
-                <input type="hidden" name="productId" value="${product.id}">
-                <button type="submit"><fmt:message key="main.product.add.button" /></button>
-            </form>
+                <form action="TechStore" method="post">
+                    <input type="hidden" name="command" value="ADD_TO_CART">
+                    <input type="hidden" name="productId" value="${product.id}">
+                    <button type="submit"><fmt:message key="main.product.add.button"/></button>
+                </form>
             </c:if>
         </div>
     </c:forEach>

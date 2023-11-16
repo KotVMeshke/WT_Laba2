@@ -6,8 +6,11 @@ import com.example.wt_laba2.bean.User;
 import com.example.wt_laba2.dao.UserDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.exception.ServiceException;
 import com.example.wt_laba2.factory.DAOFactory;
+import com.example.wt_laba2.factory.ServiceFactory;
 import com.example.wt_laba2.logic.ICommand;
+import com.example.wt_laba2.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,13 +33,14 @@ public class Register implements ICommand {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         User user = new User();
-        UserDao userDao = null;
+        UserService userService = null;
         try {
-            userDao = DAOFactory.getFactory().getUserDao();
+            userService = ServiceFactory.getInstance().getUserService();
+
             user.setLogin(request.getParameter("Login"));
             user.setPassword(request.getParameter("Password"));
             if (user.getPassword().equals(request.getParameter("confirm-password"))) {
-                int userId = userDao.registration(user);
+                int userId = userService.registration(user);
                 request.setAttribute("SomeMessage", "Successful registration");
                 request.getSession().setAttribute(SessionAtributes.Authorized, true);
                 request.getSession().setAttribute(SessionAtributes.UserId, userId);
@@ -44,7 +48,7 @@ public class Register implements ICommand {
                 request.setAttribute("IncorrectData", "Passwords are not the same");
             }
 
-        } catch (DAOException ex) {
+        } catch (ServiceException ex) {
             throw new CommandException("Error occurred during user registration.", ex);
         }
         return JSPNameList.MAIN_PAGE;

@@ -6,8 +6,11 @@ import com.example.wt_laba2.bean.User;
 import com.example.wt_laba2.dao.UserDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.exception.ServiceException;
 import com.example.wt_laba2.factory.DAOFactory;
+import com.example.wt_laba2.factory.ServiceFactory;
 import com.example.wt_laba2.logic.ICommand;
+import com.example.wt_laba2.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,19 +36,18 @@ public class SignIn implements ICommand {
      */
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
-        UserDao userDao = null;
+        UserService userService = null;
         try {
-            userDao = DAOFactory.getFactory().getUserDao();
-            User user = userDao.signIn(request.getParameter("Login"), request.getParameter("Password"));
+           userService = ServiceFactory.getInstance().getUserService();
 
-            // Setting session attributes after successful sign-in
+            User user = userService.signIn(request.getParameter("Login"), request.getParameter("Password"));
             request.setAttribute("SomeMessage", "Successful LogIn");
             request.getSession().setAttribute(SessionAtributes.Authorized, true);
             request.getSession().setAttribute(SessionAtributes.UserId, user.getId());
             request.getSession().setAttribute(SessionAtributes.isAdmin, user.getRole());
 
-        } catch (DAOException ex) {
-            throw new CommandException("Error occurred during user sign-in.", ex);
+        } catch (ServiceException ex) {
+            throw new CommandException("Incorrect Login or password.", ex);
         }
         return JSPNameList.MAIN_PAGE;
     }

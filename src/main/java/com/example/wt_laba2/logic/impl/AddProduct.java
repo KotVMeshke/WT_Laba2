@@ -5,8 +5,11 @@ import com.example.wt_laba2.bean.Product;
 import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.exception.ServiceException;
 import com.example.wt_laba2.factory.DAOFactory;
+import com.example.wt_laba2.factory.ServiceFactory;
 import com.example.wt_laba2.logic.ICommand;
+import com.example.wt_laba2.service.ProductService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
@@ -35,8 +38,9 @@ public class AddProduct implements ICommand {
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
         InputStream inputStream = null;
-        ProductDao productDao = null;
+        ProductService productService = null;
         try {
+            productService = ServiceFactory.getInstance().getProductService();
             String productName = request.getParameter("productName");
             String productPrice = request.getParameter("productPrice");
             String productCategory = request.getParameter("productCategory");
@@ -44,10 +48,9 @@ public class AddProduct implements ICommand {
             if (filePart != null) {
                 inputStream = filePart.getInputStream();
             }
-            productDao = DAOFactory.getFactory().getProductDao();
-            productDao.AddProduct(productName, productPrice, productCategory, inputStream);
+            productService.AddProduct(productName,productPrice,productCategory,inputStream);
 
-        } catch (DAOException ex) {
+        } catch (ServiceException ex) {
             throw new CommandException("Error occurred while adding a product to the database.");
         } catch (ServletException ex) {
             throw new CommandException("Incorrect file format or error during file upload.");

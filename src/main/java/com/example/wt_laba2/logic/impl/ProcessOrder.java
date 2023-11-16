@@ -7,8 +7,10 @@ import com.example.wt_laba2.dao.OrderDao;
 import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.exception.ServiceException;
 import com.example.wt_laba2.factory.DAOFactory;
 import com.example.wt_laba2.logic.ICommand;
+import com.example.wt_laba2.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,25 +39,16 @@ public class ProcessOrder implements ICommand {
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
         OrderDao orderDao = null;
+        OrderService orderService = null;
         try {
             String address = request.getParameter("address");
             orderDao = DAOFactory.getFactory().getOrderDao();
             List<CartItem> cart = (ArrayList<CartItem>) request.getSession().getAttribute("cart");
 
-            // Extracting quantity information from request parameters (if needed)
-            // Sample code commented out for future use
-            /*
-            Dictionary<Integer, Integer> amount = new Hashtable<>();
-            for (CartItem object : cart) {
-                amount.put(
-                        object.getProduct().getId(),
-                        Integer.parseInt(request.getParameter("quantity_" + object.getProduct().getId())));
-            }
-            */
+            orderService.createOrder(address,cart);
 
-            orderDao.CreateOrder(address, cart);
             request.getSession().removeAttribute("cart");
-        } catch (DAOException ex) {
+        } catch (ServiceException ex) {
             throw new CommandException("Error occurred while processing the order.", ex);
         }
         return JSPNameList.MAIN_PAGE;

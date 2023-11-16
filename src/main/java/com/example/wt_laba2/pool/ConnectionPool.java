@@ -26,7 +26,8 @@ public class ConnectionPool {
      * Creates database connections and initializes the pool.
      * @throws SQLException if an SQL error occurs during connection creation.
      */
-    public void CreateConnections() throws SQLException {
+    public void CreateConnections() throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
         connections = new ArrayList<>(INITIAL_POOL_SIZE);
         for (int i = 0; i < INITIAL_POOL_SIZE; i++) {
             try {

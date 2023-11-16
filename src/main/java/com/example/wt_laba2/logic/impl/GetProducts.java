@@ -8,8 +8,11 @@ import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.dao.UserDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.exception.ServiceException;
 import com.example.wt_laba2.factory.DAOFactory;
+import com.example.wt_laba2.factory.ServiceFactory;
 import com.example.wt_laba2.logic.ICommand;
+import com.example.wt_laba2.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,17 +42,17 @@ public class GetProducts implements ICommand {
         ProductDao productDao = null;
         String category = null;
         try {
+            ProductService productService = ServiceFactory.getInstance().getProductService();
             category = request.getParameter("category");
-            productDao = DAOFactory.getFactory().getProductDao();
             if (category == null || category.isEmpty()){
-                list = productDao.GetAllProduct();
+                list = productService.GetAllProduct();
             } else {
-                list = productDao.GetProductListByCat(category);
+                list = productService.GetProductListByCat(category);
             }
 
             request.setAttribute("products", list);
 
-        } catch (DAOException ex) {
+        } catch (ServiceException ex) {
             throw new CommandException("Error occurred while fetching products from the database.", ex);
         }
         return "index.jsp";

@@ -138,7 +138,7 @@ public class SQLUserDAO implements UserDao {
      * @throws DAOException if there's an error setting the ban.
      */
     @Override
-    public void SetBan(int userId) throws DAOException {
+    public Boolean SetBan(int userId) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
         Connection con = null;
@@ -161,6 +161,7 @@ public class SQLUserDAO implements UserDao {
                 throw new DAOException("SQl connection close error", e);
             }
         }
+        return true;
     }
     /**
      * Removes a ban for a user by their ID.
@@ -168,7 +169,7 @@ public class SQLUserDAO implements UserDao {
      * @throws DAOException if there's an error removing the ban.
      */
     @Override
-    public void removeBan(int userId) throws DAOException {
+    public Boolean removeBan(int userId) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
         Connection con = null;
@@ -191,5 +192,6 @@ public class SQLUserDAO implements UserDao {
                 throw new DAOException("SQl connection close error", e);
             }
         }
+        return true;
     }
 }

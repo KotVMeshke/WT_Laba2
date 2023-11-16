@@ -138,7 +138,7 @@ public class SQLProductDAO implements ProductDao {
      * @throws DAOException if there's an error setting the discount.
      */
     @Override
-    public void SetDiscount(int productId, int discountSize) throws DAOException {
+    public boolean SetDiscount(int productId, int discountSize) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
         Connection con = null;
@@ -163,6 +163,7 @@ public class SQLProductDAO implements ProductDao {
                 throw new DAOException("SQl connection close error", e);
             }
         }
+        return true;
     }
     /**
      * Adds a new product to the database.
@@ -173,7 +174,7 @@ public class SQLProductDAO implements ProductDao {
      * @throws DAOException if there's an error adding the product.
      */
     @Override
-    public void AddProduct(String name,String price, String category, InputStream file) throws DAOException {
+    public boolean AddProduct(String name,String price, String category, InputStream file) throws DAOException {
         ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
         PreparedStatement ps = null;
         Connection con = null;
@@ -210,6 +211,7 @@ public class SQLProductDAO implements ProductDao {
                 throw new DAOException("SQl connection close error", e);
             }
         }
+        return true;
     }
     /**
      * Retrieves a product by its ID from the database.

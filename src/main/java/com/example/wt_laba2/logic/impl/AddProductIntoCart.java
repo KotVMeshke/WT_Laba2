@@ -5,7 +5,9 @@ import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
 import com.example.wt_laba2.factory.DAOFactory;
+import com.example.wt_laba2.factory.ServiceFactory;
 import com.example.wt_laba2.logic.ICommand;
+import com.example.wt_laba2.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,13 +33,13 @@ public class AddProductIntoCart implements ICommand {
      */
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
-        ProductDao productDao = null;
+        ProductService productService = null;
         try {
-            productDao = DAOFactory.getFactory().getProductDao();
+            productService = ServiceFactory.getInstance().getProductService();
             int productId = Integer.parseInt(request.getParameter("productId"));
 
             List<CartItem> cart = (List<CartItem>) request.getSession().getAttribute("cart");
-            Product product = productDao.GetProductById(productId);
+            Product product = productService.GetProductById(productId);
             if (cart == null) {
                 cart = new ArrayList<>();
             }

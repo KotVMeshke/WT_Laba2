@@ -5,8 +5,11 @@ import com.example.wt_laba2.dao.ProductDao;
 import com.example.wt_laba2.dao.UserDao;
 import com.example.wt_laba2.exception.CommandException;
 import com.example.wt_laba2.exception.DAOException;
+import com.example.wt_laba2.exception.ServiceException;
 import com.example.wt_laba2.factory.DAOFactory;
+import com.example.wt_laba2.factory.ServiceFactory;
 import com.example.wt_laba2.logic.ICommand;
+import com.example.wt_laba2.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,16 +33,12 @@ public class SetBan implements ICommand {
      */
     @Override
     public String execute(HttpServletRequest request) throws CommandException, ParserConfigurationException, IOException, DAOException {
-        UserDao userDao = null;
+        UserService userService = null;
         try {
-            userDao = DAOFactory.getFactory().getUserDao();
+            userService = ServiceFactory.getInstance().getUserService();
             int userId = Integer.parseInt(request.getParameter("userId"));
-            if (userId <= 0){
-                throw new CommandException("Incorrect user ID");
-            }
-
-            userDao.SetBan(userId);
-        } catch (DAOException ex) {
+            userService.SetBan(userId);
+        } catch (ServiceException ex) {
             throw new CommandException("Error occurred while setting the ban.", ex);
         }
         return JSPNameList.ADMINISTRATOR_PAGE;

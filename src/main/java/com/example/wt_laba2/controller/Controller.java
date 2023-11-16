@@ -40,14 +40,17 @@ public class Controller extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+
             ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
             connectionPool.CreateConnections();
 
         } catch (ClassNotFoundException e) {
 //            logger.error("ERROR: " + e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
         } catch (SQLException ex) {
 //            logger.error("ERROR: " + ex.getMessage());
+            System.out.println("ERROR: " + ex.getMessage());
+
 
         }
     }
@@ -62,7 +65,6 @@ public class Controller extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        logger.info("Aboba");
         String requestURI = req.getRequestURI();
         System.out.println(requestURI);
         JSPPAge pageContent = JSPHelper.getJspHelper().getPage(requestURI);
@@ -75,12 +77,17 @@ public class Controller extends HttpServlet {
             page = pageContent.execute(req);
         } catch (CommandException e) {
 //            logger.error("ERROR: Page exception in Controller " + e.toString());
+            System.out.println("ERROR: Page exception in Controller " + e.getMessage());
 
             page = JSPNameList.ERROR_PAGE;
+            req.setAttribute("error", e.getMessage());
+
         } catch (Exception e) {
-            //LOG
 //            logger.error("ERROR: Page exception in Controller " + e.toString());
             page = JSPNameList.ERROR_PAGE;
+            System.out.println("ERROR: Page exception in Controller " + e.getMessage());
+
+            req.setAttribute("error", e.getMessage());
         }
 
         RequestDispatcher dispatcher = req.getRequestDispatcher(page);
@@ -114,9 +121,14 @@ public class Controller extends HttpServlet {
             result = command.execute(req);
         } catch (CommandException ex) {
             result = JSPNameList.ERROR_PAGE;
+            req.setAttribute("error", ex.getMessage());
+            System.out.println("ERROR: Page exception in Cotroller " + ex.getMessage());
 
         } catch (Exception ex) {
             result = JSPNameList.ERROR_PAGE;
+            req.setAttribute("error", ex.getMessage());
+            System.out.println("ERROR: Page exception in Cotroller " + ex.getMessage());
+
         }
 //        resp.sendRedirect(result);
 
